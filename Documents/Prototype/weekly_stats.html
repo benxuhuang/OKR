@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>週統計 - OKR 系統</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .notification-dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background-color: #f56565;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-6 max-w-4xl">
+        <!-- 導航欄 -->
+        <nav class="bg-white shadow-md rounded-lg mb-6">
+            <ul class="flex items-center justify-between px-6 py-3">
+                <li class="text-xl font-bold text-indigo-700">
+                    <i class="fas fa-clipboard-check mr-2"></i>OKR 系統
+                </li>
+                <li class="flex items-center space-x-4">
+                    <a href="today_tasks.html" class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-tasks mr-1"></i>今日任務
+                    </a>
+                    <a href="goals_management.html" class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-bullseye mr-1"></i>目標管理
+                    </a>
+                    <a href="weekly_stats.html" class="px-3 py-2 bg-indigo-100 text-indigo-800 rounded-md font-medium">
+                        <i class="fas fa-chart-bar mr-1"></i>週統計
+                    </a>
+                    <a href="monthly_stats.html" class="px-3 py-2 text-gray-600 hover:bg-gray-100 rounded-md">
+                        <i class="fas fa-calendar-alt mr-1"></i>月統計
+                    </a>
+                    <div class="relative">
+                        <button class="text-gray-600 hover:text-indigo-600">
+                            <i class="fas fa-bell text-xl"></i>
+                            <span class="notification-dot"></span>
+                        </button>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 週統計標題與切換週 -->
+        <div class="bg-white shadow rounded-lg mb-6 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800">
+                    <i class="fas fa-chart-bar text-indigo-600 mr-2"></i>
+                    週進度分析
+                </h2>
+                <div class="flex items-center">
+                    <button class="text-gray-600 hover:text-indigo-600 mr-3">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="font-medium">2025年5月5日 - 5月11日</span>
+                    <button class="text-gray-600 hover:text-indigo-600 ml-3" disabled>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 週總結摘要卡片 -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <!-- 卡片1：本週目標完成率 -->
+                <div class="stat-card bg-gradient-to-br from-indigo-500 to-indigo-700 text-white rounded-lg p-4 flex items-center">
+                    <div class="mr-4 bg-white bg-opacity-30 rounded-full p-3">
+                        <i class="fas fa-bullseye text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-white text-opacity-90 text-sm">目標完成率</p>
+                        <p class="text-2xl font-bold">67%</p>
+                    </div>
+                </div>
+                
+                <!-- 卡片2：已完成目標數 -->
+                <div class="stat-card bg-gradient-to-br from-green-500 to-green-700 text-white rounded-lg p-4 flex items-center">
+                    <div class="mr-4 bg-white bg-opacity-30 rounded-full p-3">
+                        <i class="fas fa-check-circle text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-white text-opacity-90 text-sm">已完成任務</p>
+                        <p class="text-2xl font-bold">15 項</p>
+                    </div>
+                </div>
+                
+                <!-- 卡片3：連續達成天數 -->
+                <div class="stat-card bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-lg p-4 flex items-center">
+                    <div class="mr-4 bg-white bg-opacity-30 rounded-full p-3">
+                        <i class="fas fa-fire text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-white text-opacity-90 text-sm">連續達成</p>
+                        <p class="text-2xl font-bold">12 天</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主要分析區域 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- 每日完成趨勢圖 -->
+            <div class="md:col-span-2 bg-white shadow rounded-lg p-4">
+                <h3 class="text-lg font-medium text-gray-800 mb-4">本週任務完成趨勢</h3>
+                <div class="h-64">
+                    <canvas id="weeklyTrendChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 目標分類比例圖 -->
+            <div class="bg-white shadow rounded-lg p-4">
+                <h3 class="text-lg font-medium text-gray-800 mb-4">目標分類比例</h3>
+                <div class="h-64">
+                    <canvas id="goalCategoryChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- 各目標完成狀況 -->
+            <div class="md:col-span-3 bg-white shadow rounded-lg p-4">
+                <h3 class="text-lg font-medium text-gray-800 mb-4">各目標週進度</h3>
+                <div class="space-y-4">
+                    <!-- 目標進度條1 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-700 font-medium">晨間冥想</span>
+                            <span class="text-indigo-600 font-medium">5/7</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-indigo-600 h-3 rounded-full" style="width: 71%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 目標進度條2 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-700 font-medium">每日英語口說練習</span>
+                            <span class="text-indigo-600 font-medium">6/7</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-indigo-600 h-3 rounded-full" style="width: 86%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 目標進度條3 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-700 font-medium">與ChatGPT練習英語口說</span>
+                            <span class="text-indigo-600 font-medium">1/2</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-indigo-600 h-3 rounded-full" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 目標進度條4 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-700 font-medium">健身訓練</span>
+                            <span class="text-indigo-600 font-medium">2/3</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-indigo-600 h-3 rounded-full" style="width: 67%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 目標進度條5 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-700 font-medium">閱讀專業書籍</span>
+                            <span class="text-indigo-600 font-medium">1/2</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-indigo-600 h-3 rounded-full" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 目標進度條6 -->
+                    <div>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-gray-700 font-medium">學習程式技術</span>
+                            <span class="text-indigo-600 font-medium">2/3</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-3">
+                            <div class="bg-indigo-600 h-3 rounded-full" style="width: 67%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化圖表
+        document.addEventListener('DOMContentLoaded', function() {
+            // 週趨勢圖表
+            const weeklyTrendCtx = document.getElementById('weeklyTrendChart').getContext('2d');
+            const weeklyTrendChart = new Chart(weeklyTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: ['週一', '週二', '週三', '週四', '週五', '週六', '週日'],
+                    datasets: [{
+                        label: '完成任務數',
+                        data: [3, 2, 4, 2, 3, 1, 0],
+                        borderColor: '#4F46E5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 5,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // 目標分類比例圖
+            const goalCategoryCtx = document.getElementById('goalCategoryChart').getContext('2d');
+            const goalCategoryChart = new Chart(goalCategoryCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['每日', '每週', '每月'],
+                    datasets: [{
+                        data: [2, 4, 2],
+                        backgroundColor: [
+                            '#4F46E5',
+                            '#8B5CF6',
+                            '#EC4899'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        });
+    </script>
+</body>
+</html>
