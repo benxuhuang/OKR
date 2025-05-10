@@ -28,16 +28,20 @@
           <h3 class="text-lg font-medium text-gray-800">{{ goal.title || '未命名目標' }}</h3>
           <div class="flex space-x-2">
             <button
-              class="text-gray-400 hover:text-indigo-600"
+              class="p-2 rounded-lg hover:bg-indigo-100 text-indigo-600 transition-colors duration-200 flex items-center"
               @click="$emit('edit', goal)"
+              title="編輯目標"
             >
-              <i class="fas fa-edit"></i>
+              <i class="fas fa-edit mr-1"></i>
+              <span class="text-sm">編輯</span>
             </button>
             <button
-              class="text-gray-400 hover:text-red-600"
+              class="p-2 rounded-lg hover:bg-red-100 text-red-600 transition-colors duration-200 flex items-center"
               @click="confirmDelete(goal)"
+              title="刪除目標"
             >
-              <i class="fas fa-trash"></i>
+              <i class="fas fa-trash mr-1"></i>
+              <span class="text-sm">刪除</span>
             </button>
           </div>
         </div>
@@ -70,7 +74,7 @@
 
         <div class="w-full bg-gray-200 rounded-full h-2">
           <div
-            class="bg-indigo-600 h-2 rounded-full"
+            class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
             :style="{ width: calculateProgress(goal) + '%' }"
           ></div>
         </div>
@@ -80,22 +84,23 @@
     <!-- 刪除確認對話框 -->
     <div
       v-if="showDeleteConfirm"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+      @click.self="cancelDelete"
     >
-      <div class="bg-white rounded-lg p-6 max-w-sm mx-4">
+      <div class="bg-white rounded-lg p-6 max-w-sm mx-4 transform transition-all duration-300 scale-100 opacity-100 shadow-xl">
         <h4 class="text-lg font-semibold mb-4">確認刪除</h4>
         <p class="text-gray-600 mb-6">
           確定要刪除「{{ goalToDelete?.title }}」這個目標嗎？此操作無法復原。
         </p>
         <div class="flex justify-end space-x-4">
           <button
-            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
             @click="cancelDelete"
           >
             取消
           </button>
           <button
-            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
             @click="confirmDeleteAction"
           >
             刪除
@@ -186,13 +191,19 @@ export default {
     confirmDelete(goal) {
       this.goalToDelete = goal
       this.showDeleteConfirm = true
+      // 添加焦點陷阱，避免用戶在對話框開啟時與背景互動
+      document.body.style.overflow = 'hidden'
     },
     cancelDelete() {
       this.goalToDelete = null
       this.showDeleteConfirm = false
+      // 恢復頁面滾動
+      document.body.style.overflow = ''
     },
     confirmDeleteAction() {
-      this.$emit('delete', this.goalToDelete.id)
+      if (this.goalToDelete && this.goalToDelete.id) {
+        this.$emit('delete', this.goalToDelete.id)
+      }
       this.cancelDelete()
     }
   }

@@ -1,5 +1,5 @@
 # TODO 任務清單
-# 當前 Snapshot 版本：v1.0.0
+# 當前 Snapshot 版本：v1.1.0
 
 ## 1. 目標管理 [Goal Management]
 
@@ -20,9 +20,9 @@
 
 ### 1.3 目標列表與刪除 [Goal List and Deletion]
 - [x] 1.3.1 顯示所有已建立目標
-- [ ] 1.3.2 編輯目標功能
-- [ ] 1.3.3 刪除目標功能
-- [ ] 1.3.4 刪除前確認提示
+- [x] 1.3.2 編輯目標功能
+- [x] 1.3.3 刪除目標功能
+- [x] 1.3.4 刪除前確認提示
 
 ## 2. 每日任務生成與追蹤 [Daily Task Generation and Tracking]
 

@@ -83,7 +83,7 @@
             v-for="day in daysOfWeek"
             :key="day.value"
             type="button"
-            class="px-2 py-1 rounded-lg text-sm"
+            class="px-2 py-1 rounded-lg text-sm transition-colors duration-200"
             :class="[
               formData.daysOfWeek.includes(day.value)
                 ? 'bg-indigo-600 text-white'
@@ -94,6 +94,7 @@
             {{ day.label }}
           </button>
         </div>
+        <p v-if="errors.daysOfWeek" class="text-red-500 text-xs mt-1">{{ errors.daysOfWeek }}</p>
       </div>
 
       <!-- 執行時間 -->
@@ -106,21 +107,37 @@
           v-model="formData.time"
           type="time"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+          :class="{ 'border-red-500': errors.time }"
         >
+        <p v-if="errors.time" class="text-red-500 text-xs mt-1">{{ errors.time }}</p>
+      </div>
+
+      <!-- 描述 (選填) -->
+      <div class="mb-6">
+        <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+          描述 (選填)
+        </label>
+        <textarea
+          id="description"
+          v-model="formData.description"
+          rows="3"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+          placeholder="輸入目標描述（選填）"
+        ></textarea>
       </div>
 
       <!-- 按鈕 -->
       <div class="flex justify-end space-x-4">
         <button
           type="button"
-          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
           @click="$emit('cancel')"
         >
           取消
         </button>
         <button
           type="submit"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+          class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
         >
           {{ isEdit ? '更新' : '新增' }}
         </button>
@@ -185,18 +202,63 @@ export default {
       immediate: true,
       handler(newGoal) {
         if (newGoal && Object.keys(newGoal).length > 0) {
-          this.formData = { ...newGoal }
+          // 確保 daysOfWeek 是陣列
+          const daysOfWeek = Array.isArray(newGoal.daysOfWeek) 
+            ? [...newGoal.daysOfWeek] 
+            : [];
+            
+          this.formData = {
+            ...this.formData, // 保留預設值
+            ...newGoal, // 覆蓋為目標資料
+            daysOfWeek // 確保 daysOfWeek 是陣列
+          };
+        } else {
+          // 重設表單為預設值
+          this.resetForm();
         }
+      }
+    },
+    'formData.frequencyType': function(newType) {
+      // 當頻率類型改變時，調整執行次數上限
+      if (newType === 'day' && this.formData.timesPerPeriod > 1) {
+        this.formData.timesPerPeriod = 1;
+      }
+      
+      // 如果切換到每日，清空執行日期
+      if (newType === 'day') {
+        this.formData.daysOfWeek = [];
       }
     }
   },
   methods: {
+    resetForm() {
+      this.formData = {
+        title: '',
+        frequencyType: 'day',
+        timesPerPeriod: 1,
+        daysOfWeek: [],
+        time: '09:00',
+        description: '',
+        completedTimes: 0,
+        progress: 0
+      };
+      this.errors = {};
+    },
     toggleDay(day) {
-      const index = this.formData.daysOfWeek.indexOf(day)
+      if (!Array.isArray(this.formData.daysOfWeek)) {
+        this.formData.daysOfWeek = [];
+      }
+      
+      const index = this.formData.daysOfWeek.indexOf(day);
       if (index === -1) {
-        this.formData.daysOfWeek.push(day)
+        this.formData.daysOfWeek.push(day);
       } else {
-        this.formData.daysOfWeek.splice(index, 1)
+        this.formData.daysOfWeek.splice(index, 1);
+      }
+      
+      // 清除相關錯誤
+      if (this.errors.daysOfWeek) {
+        delete this.errors.daysOfWeek;
       }
     },
     validate() {
@@ -205,6 +267,11 @@ export default {
       // 驗證標題
       if (!this.formData.title?.trim()) {
         this.errors.title = '請輸入目標標題';
+        return false;
+      }
+      
+      if (this.formData.title.trim().length > 100) {
+        this.errors.title = '目標標題不能超過 100 字';
         return false;
       }
       
@@ -241,9 +308,31 @@ export default {
           completedTimes: this.formData.completedTimes || 0,
           progress: this.formData.progress || 0,
           description: this.formData.description || ''
-        })
+        });
       }
     }
   }
 }
-</script> 
+</script>
+
+<style scoped>
+.form-radio {
+  appearance: none;
+  border-radius: 50%;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #d1d5db;
+  transition: all 0.2s ease;
+}
+
+.form-radio:checked {
+  border-color: #4f46e5;
+  background-color: #4f46e5;
+  box-shadow: inset 0 0 0 3px white;
+}
+
+.form-radio:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+}
+</style>
