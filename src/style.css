@@ -2,8 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    font-family: system-ui, sans-serif;
+  }
+}
+
 @layer components {
   .btn {
-    @apply px-4 py-2 rounded-lg text-white bg-blue-500 hover:bg-blue-600 transition-colors;
+    @apply px-4 py-2 rounded;
+  }
+  .btn-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
   }
 } 

@@ -3,13 +3,13 @@
 ## 1. 目標管理 [Goal Management]
 
 ### 1.1 建立目標 [Create Goal]
-- [ ] 1.1.1 輸入目標標題
-- [ ] 1.1.2 設定頻率類型（每日/每週/每月）
-- [ ] 1.1.3 設定次數與執行日（daysOfWeek）
-- [ ] 1.1.4 設定執行時間（HH:MM）
-- [ ] 1.1.5 資料儲存至 IndexedDB 或 localStorage
-- [ ] 1.1.6 驗證：title 不可為空且不超過 100 字
-- [ ] 1.1.7 驗證：timesPerPeriod 為正整數且不超過限制值
+- [x] 1.1.1 輸入目標標題
+- [x] 1.1.2 設定頻率類型（每日/每週/每月）
+- [x] 1.1.3 設定次數與執行日（daysOfWeek）
+- [x] 1.1.4 設定執行時間（HH:MM）
+- [x] 1.1.5 資料儲存至 IndexedDB 或 localStorage
+- [x] 1.1.6 驗證：title 不可為空且不超過 100 字
+- [x] 1.1.7 驗證：timesPerPeriod 為正整數且不超過限制值
 
 ### 1.2 目標提醒設定 [Reminder Settings]
 - [ ] 1.2.1 設定提醒時間（搭配執行日）
