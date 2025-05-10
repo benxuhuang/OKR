@@ -2,11 +2,21 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/OKR/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/okr/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + Vue</title>
-    <script type="module" crossorigin src="/OKR/assets/index-e61c229a.js"></script>
-    <link rel="stylesheet" href="/OKR/assets/index-5e9b374c.css">
+    <title>OKR</title>
+    <script type="text/javascript">
+      // GitHub Pages 路由重新導向處理
+      (function() {
+        const redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/okr/assets/index-2bd9918f.js"></script>
+    <link rel="stylesheet" href="/okr/assets/index-5e9b374c.css">
   </head>
   <body>
     <div id="app"></div>
