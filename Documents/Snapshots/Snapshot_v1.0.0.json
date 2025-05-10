@@ -1,0 +1,137 @@
+{
+  "project_name": "OKR 系統",
+  "snapshot_version": "1.0.0",
+  "created_at": "2024-03-21T10:00:00Z",
+  "features": [
+    {
+      "feature_id": "1.1",
+      "name": "建立目標",
+      "description": "允許使用者建立新的目標，包含標題、頻率類型、執行次數、執行日期和時間等設定。",
+      "inputs": [
+        {
+          "name": "title",
+          "type": "string",
+          "description": "目標標題，不可為空且不超過 100 字"
+        },
+        {
+          "name": "frequencyType",
+          "type": "string",
+          "description": "頻率類型，可選值：day（每日）、weekly（每週）、monthly（每月）"
+        },
+        {
+          "name": "timesPerPeriod",
+          "type": "number",
+          "description": "每個週期的執行次數，根據頻率類型有不同的上限：每日(1)、每週(7)、每月(31)"
+        },
+        {
+          "name": "daysOfWeek",
+          "type": "array<string>",
+          "description": "執行日期，當頻率類型為 weekly 時必填，可選值：Monday、Tuesday、Wednesday、Thursday、Friday、Saturday、Sunday"
+        },
+        {
+          "name": "time",
+          "type": "string",
+          "description": "執行時間，格式為 HH:MM"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "object",
+          "description": "新建立的目標資料，包含 id、createdAt、updatedAt 等資訊"
+        }
+      ],
+      "dependencies": [
+        {
+          "type": "database",
+          "name": "IndexedDB",
+          "description": "用於儲存目標資料的瀏覽器內建資料庫"
+        }
+      ],
+      "code_snippet": "src/components/GoalForm.vue, src/services/indexedDB.js",
+      "status": "active",
+      "metadata": {
+        "created_at": "2024-03-21T10:00:00Z",
+        "updated_at": "2024-03-21T10:00:00Z",
+        "author": "開發團隊",
+        "file_locations": [
+          "src/components/GoalForm.vue",
+          "src/services/indexedDB.js",
+          "src/views/GoalManagement.vue"
+        ]
+      }
+    },
+    {
+      "feature_id": "1.3.1",
+      "name": "目標列表",
+      "description": "顯示所有已建立的目標，包含目標詳細資訊、完成進度等。支援依頻率類型篩選和搜尋功能。",
+      "inputs": [
+        {
+          "name": "searchQuery",
+          "type": "string",
+          "description": "搜尋關鍵字，用於過濾目標列表"
+        },
+        {
+          "name": "filterType",
+          "type": "string",
+          "description": "頻率類型篩選，可選值：all、day、weekly、monthly"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "array<object>",
+          "description": "符合搜尋條件的目標列表"
+        }
+      ],
+      "dependencies": [
+        {
+          "type": "database",
+          "name": "IndexedDB",
+          "description": "用於讀取目標資料的瀏覽器內建資料庫"
+        }
+      ],
+      "code_snippet": "src/components/GoalList.vue",
+      "status": "active",
+      "metadata": {
+        "created_at": "2024-03-21T10:00:00Z",
+        "updated_at": "2024-03-21T10:00:00Z",
+        "author": "開發團隊",
+        "file_locations": [
+          "src/components/GoalList.vue",
+          "src/views/GoalManagement.vue"
+        ]
+      }
+    }
+  ],
+  "pending_features": [
+    {
+      "feature_id": "1.2",
+      "name": "目標提醒設定",
+      "status": "pending",
+      "description": "包含提醒時間設定、推播通知、瀏覽器通知授權等功能"
+    },
+    {
+      "feature_id": "2.1",
+      "name": "任務生成邏輯",
+      "status": "pending",
+      "description": "根據目標設定自動生成每日任務"
+    },
+    {
+      "feature_id": "2.2",
+      "name": "任務完成勾選",
+      "status": "pending",
+      "description": "允許使用者標記任務完成狀態"
+    },
+    {
+      "feature_id": "3.1",
+      "name": "週統計頁面",
+      "status": "pending",
+      "description": "顯示每週目標完成情況的統計資訊"
+    },
+    {
+      "feature_id": "3.2",
+      "name": "月統計頁面",
+      "status": "pending",
+      "description": "顯示每月目標完成情況的統計資訊"
+    }
+  ]
+} 
