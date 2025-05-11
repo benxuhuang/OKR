@@ -5,19 +5,22 @@
     </div>
     
     <div class="tasks-list">
-      <div v-for="task in sortedTasks" :key="task.id" class="task-item">
-        <div class="task-time">{{ formatTime(task.executionTime) }}</div>
-        <div class="task-content">
-          <h3>{{ task.title }}</h3>
-          <div class="task-meta">
-            <span class="frequency-type">{{ getFrequencyText(task.frequencyType) }}</span>
-            <span class="frequency-info">{{ getFrequencyInfo(task) }}</span>
+      <div v-for="task in sortedTasks" :key="task.id" class="task-list-item bg-white dark:bg-gray-800 shadow rounded-lg p-4 flex items-center transition-all duration-300" :class="{ 'opacity-75': task.status === 'completed' }">
+        <div class="flex-1">
+          <div class="flex items-center">
+            <input type="checkbox" class="task-checkbox w-5 h-5 text-indigo-600 dark:text-indigo-500 rounded mr-3 cursor-pointer" :checked="task.status === 'completed'" @change="toggleTaskStatus(task)">
+            <span class="task-title text-lg font-medium" :class="[task.status === 'completed' ? 'text-gray-400 dark:text-gray-500 line-through' : 'text-gray-800 dark:text-gray-100']">{{ task.title }}</span>
+            <div class="ml-3 flex items-center gap-2">
+              <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 text-xs rounded-full">{{ getFrequencyText(task.frequencyType) }}</span>
+              <span v-if="getFrequencyInfo(task)" class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs rounded-full">{{ getFrequencyInfo(task) }}</span>
+            </div>
           </div>
+          <p class="text-gray-500 dark:text-gray-400 mt-1 ml-8">
+            <i class="far fa-clock mr-1"></i>今日 {{ formatTime(task.time) }}
+          </p>
         </div>
-        <div class="task-actions">
-          <button @click="completeTask(task)" :class="{ 'completed': task.completed }">
-            {{ task.completed ? '已完成' : '完成' }}
-          </button>
+        <div class="flex items-center">
+          <div class="px-3 py-1 rounded-full text-sm" :class="getStatusClass(task.status)">{{ getStatusText(task.status) }}</div>
         </div>
       </div>
     </div>
@@ -38,17 +41,17 @@ export default {
 
     const sortedTasks = computed(() => {
       return [...taskStore.todayTasks].sort((a, b) => {
-        return new Date(a.executionTime) - new Date(b.executionTime);
+        const timeA = a.time ? a.time.split(':').map(Number) : [24, 0];
+        const timeB = b.time ? b.time.split(':').map(Number) : [24, 0];
+        return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
       });
     });
 
     const isDarkMode = computed(() => themeStore.isDarkMode);
 
     const formatTime = (time) => {
-      return new Date(time).toLocaleTimeString('zh-TW', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      if (!time) return '未設定時間';
+      return time;
     };
 
     const getFrequencyText = (type) => {
@@ -78,13 +81,38 @@ export default {
       await taskStore.completeTask(task.id);
     };
 
+    const toggleTaskStatus = async (task) => {
+      await taskStore.toggleTaskStatus(task.id);
+    };
+
+    const getStatusClass = (status) => {
+      const classes = {
+        'completed': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+        'in-progress': 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200',
+        'not-started': 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+      };
+      return classes[status] || 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
+    };
+
+    const getStatusText = (status) => {
+      const texts = {
+        'completed': '已完成',
+        'in-progress': '進行中',
+        'not-started': '未開始'
+      };
+      return texts[status] || '未知';
+    };
+
     return {
       sortedTasks,
       isDarkMode,
       formatTime,
       getFrequencyText,
       getFrequencyInfo,
-      completeTask
+      completeTask,
+      toggleTaskStatus,
+      getStatusClass,
+      getStatusText
     };
   }
 };
@@ -116,7 +144,7 @@ export default {
   gap: 1rem;
 }
 
-.task-item {
+.task-list-item {
   display: flex;
   align-items: center;
   padding: 1rem;
@@ -125,7 +153,7 @@ export default {
   gap: 1rem;
 }
 
-.dark .task-item {
+.dark .task-list-item {
   background-color: #2d4059;
 }
 

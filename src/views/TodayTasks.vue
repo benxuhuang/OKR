@@ -163,9 +163,19 @@ export default {
 
     const filteredTasks = computed(() => {
       if (currentFilter.value === 'all') {
-        return tasks.value;
+        return tasks.value.sort((a, b) => {
+          // 按時間排序（由早到晚）
+          const timeA = a.time ? a.time.split(':').map(Number) : [24, 0];
+          const timeB = b.time ? b.time.split(':').map(Number) : [24, 0];
+          return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
+        });
       }
-      return tasks.value.filter(task => task.status === currentFilter.value);
+      return tasks.value.filter(task => task.status === currentFilter.value).sort((a, b) => {
+        // 按時間排序（由早到晚）
+        const timeA = a.time ? a.time.split(':').map(Number) : [24, 0];
+        const timeB = b.time ? b.time.split(':').map(Number) : [24, 0];
+        return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
+      });
     });
 
     const completedCount = computed(() => 

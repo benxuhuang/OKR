@@ -1,28 +1,28 @@
 <template>
-  <div class="bg-white shadow rounded-lg p-6">
-    <h3 class="text-xl font-semibold text-gray-800 mb-4">
+  <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
+    <h3 class="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
       {{ isEdit ? '編輯目標' : '新增目標' }}
     </h3>
     <form @submit.prevent="handleSubmit">
       <!-- 目標標題 -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="title">
           目標標題
         </label>
         <input
           id="title"
           v-model="formData.title"
           type="text"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
-          :class="{ 'border-red-500': errors.title }"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
+          :class="{ 'border-red-500 dark:border-red-700': errors.title }"
           placeholder="請輸入目標標題"
         >
-        <p v-if="errors.title" class="text-red-500 text-xs mt-1">{{ errors.title }}</p>
+        <p v-if="errors.title" class="text-red-500 dark:text-red-400 text-xs mt-1">{{ errors.title }}</p>
       </div>
 
       <!-- 頻率類型 -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
           頻率類型
         </label>
         <div class="flex space-x-4">
@@ -33,7 +33,7 @@
               value="day"
               class="form-radio text-indigo-600"
             >
-            <span class="ml-2">每日</span>
+            <span class="ml-2 text-gray-700 dark:text-gray-300">每日</span>
           </label>
           <label class="inline-flex items-center">
             <input
@@ -42,7 +42,7 @@
               value="weekly"
               class="form-radio text-indigo-600"
             >
-            <span class="ml-2">每週</span>
+            <span class="ml-2 text-gray-700 dark:text-gray-300">每週</span>
           </label>
           <label class="inline-flex items-center">
             <input
@@ -51,14 +51,14 @@
               value="monthly"
               class="form-radio text-indigo-600"
             >
-            <span class="ml-2">每月</span>
+            <span class="ml-2 text-gray-700 dark:text-gray-300">每月</span>
           </label>
         </div>
       </div>
 
       <!-- 執行次數 -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="timesPerPeriod">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="timesPerPeriod">
           執行次數
         </label>
         <input
@@ -67,15 +67,15 @@
           type="number"
           min="1"
           :max="maxTimesPerPeriod"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
-          :class="{ 'border-red-500': errors.timesPerPeriod }"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
+          :class="{ 'border-red-500 dark:border-red-700': errors.timesPerPeriod }"
         >
-        <p v-if="errors.timesPerPeriod" class="text-red-500 text-xs mt-1">{{ errors.timesPerPeriod }}</p>
+        <p v-if="errors.timesPerPeriod" class="text-red-500 dark:text-red-400 text-xs mt-1">{{ errors.timesPerPeriod }}</p>
       </div>
 
       <!-- 執行日期 -->
       <div class="mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2">
           執行日期
         </label>
         <div class="grid grid-cols-7 gap-2">
@@ -87,7 +87,7 @@
             :class="[
               formData.daysOfWeek.includes(day.value)
                 ? 'bg-indigo-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
             ]"
             @click="toggleDay(day.value)"
           >
@@ -99,29 +99,29 @@
 
       <!-- 執行時間 -->
       <div class="mb-6">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="time">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="time">
           執行時間
         </label>
         <input
           id="time"
           v-model="formData.time"
           type="time"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
-          :class="{ 'border-red-500': errors.time }"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
+          :class="{ 'border-red-500 dark:border-red-700': errors.time }"
         >
-        <p v-if="errors.time" class="text-red-500 text-xs mt-1">{{ errors.time }}</p>
+        <p v-if="errors.time" class="text-red-500 dark:text-red-400 text-xs mt-1">{{ errors.time }}</p>
       </div>
 
       <!-- 描述 (選填) -->
       <div class="mb-6">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+        <label class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2" for="description">
           描述 (選填)
         </label>
         <textarea
           id="description"
           v-model="formData.description"
           rows="3"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400"
+          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
           placeholder="輸入目標描述（選填）"
         ></textarea>
       </div>
@@ -130,14 +130,14 @@
       <div class="flex justify-end space-x-4">
         <button
           type="button"
-          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+          class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
           @click="$emit('cancel')"
         >
           取消
         </button>
         <button
           type="submit"
-          class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+          class="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors duration-200"
         >
           {{ isEdit ? '更新' : '新增' }}
         </button>

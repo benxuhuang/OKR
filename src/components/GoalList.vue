@@ -28,20 +28,18 @@
           <h3 class="text-lg font-medium text-gray-800 dark:text-gray-100">{{ goal.title || '未命名目標' }}</h3>
           <div class="flex space-x-2">
             <button
-              class="p-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-600 dark:text-indigo-400 transition-colors duration-200 flex items-center"
+              class="p-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center justify-center w-8 h-8"
               @click="$emit('edit', goal)"
               title="編輯目標"
             >
-              <i class="fas fa-edit mr-1"></i>
-              <span class="text-sm">編輯</span>
+              <font-awesome-icon icon="edit" class="text-lg" />
             </button>
             <button
-              class="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 transition-colors duration-200 flex items-center"
+              class="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200 flex items-center justify-center w-8 h-8"
               @click="confirmDelete(goal)"
               title="刪除目標"
             >
-              <i class="fas fa-trash mr-1"></i>
-              <span class="text-sm">刪除</span>
+              <font-awesome-icon icon="trash" class="text-lg" />
             </button>
           </div>
         </div>
@@ -54,7 +52,7 @@
             {{ getFrequencyTypeLabel(goal.frequencyType || 'day') }}
           </span>
           <span v-if="goal.time || goal.daysOfWeek?.length">
-            <i class="far fa-clock mr-1"></i>
+            <font-awesome-icon icon="clock" class="mr-1" />
             {{ formatExecutionTime(goal) }}
           </span>
         </div>
