@@ -3,6 +3,7 @@ import GoalManagement from '../views/GoalManagement.vue'
 import TodayTasks from '../views/TodayTasks.vue'
 import WeeklyStats from '../views/WeeklyStats.vue'
 import MonthlyStats from '../views/MonthlyStats.vue'
+import Settings from '../views/Settings.vue'
 
 const routes = [
   {
@@ -18,6 +19,11 @@ const routes = [
     path: '/goals',
     name: 'Goals',
     component: GoalManagement
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: Settings
   },
   {
     path: '/weekly-stats',

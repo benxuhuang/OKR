@@ -21,12 +21,14 @@ const ALL_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Frida
 
 // 刪除現有資料庫
 export const resetDatabase = async () => {
-  console.log('重置資料庫...');
+  console.log('重設資料庫...');
   try {
     await deleteDB(DB_NAME);
-    console.log('資料庫已刪除');
+    console.log('資料庫已重設');
+    window.location.reload();
   } catch (error) {
-    console.error('刪除資料庫失敗:', error);
+    console.error('重設資料庫失敗:', error);
+    throw new Error('重設資料庫時發生錯誤');
   }
 };
 
@@ -304,4 +306,74 @@ async function shouldGenerateTaskForGoal(goal, date) {
     console.error('檢查是否應生成任務時發生錯誤:', error);
     throw error;
   }
-} 
+}
+
+// 匯出資料
+export const exportData = async () => {
+  console.log('匯出資料...');
+  try {
+    const db = await initDB();
+    const goals = await db.getAll(GOAL_STORE);
+    const tasks = await db.getAll(TASK_STORE);
+    
+    const data = {
+      goals,
+      tasks,
+      exportDate: new Date().toISOString()
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `okr-backup-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    console.log('資料匯出成功');
+    return true;
+  } catch (error) {
+    console.error('匯出資料失敗:', error);
+    throw new Error('匯出資料時發生錯誤');
+  }
+};
+
+// 匯入資料
+export const importData = async (file) => {
+  console.log('匯入資料...');
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    const db = await initDB();
+    
+    // 使用交易來確保資料一致性
+    const tx = db.transaction([GOAL_STORE, TASK_STORE], 'readwrite');
+    
+    // 清空現有資料
+    await tx.objectStore(GOAL_STORE).clear();
+    await tx.objectStore(TASK_STORE).clear();
+    
+    // 匯入新資料
+    if (data.goals?.length) {
+      for (const goal of data.goals) {
+        await tx.objectStore(GOAL_STORE).add(goal);
+      }
+    }
+    
+    if (data.tasks?.length) {
+      for (const task of data.tasks) {
+        await tx.objectStore(TASK_STORE).add(task);
+      }
+    }
+    
+    await tx.done;
+    console.log('資料匯入成功');
+    return true;
+  } catch (error) {
+    console.error('匯入資料失敗:', error);
+    throw new Error('匯入資料時發生錯誤');
+  }
+}; 

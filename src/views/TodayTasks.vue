@@ -218,11 +218,11 @@ export default {
       }
     };
 
-    // 每分鐘重新載入一次任務，確保時間相關的顯示是最新的
+    // 每5分鐘重新載入一次任務，確保時間相關的顯示是最新的
     let intervalId;
     onMounted(() => {
       loadTasks();
-      intervalId = setInterval(loadTasks, 60000);
+      intervalId = setInterval(loadTasks, 300000);
     });
 
     onUnmounted(() => {
