@@ -5,4 +5,9 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   plugins: [vue()],
   base: '/okr/',  // 設置基本URL為倉庫名稱
+  build: {
+    rollupOptions: {
+      external: ['idb'],
+    },
+  },
 }) 
