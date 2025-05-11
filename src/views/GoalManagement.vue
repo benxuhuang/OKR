@@ -39,6 +39,7 @@
     <div class="fixed-height-container">
       <GoalList
         :goals="filteredGoals"
+        :key="goalsUpdateTrigger"
         @edit="handleEdit"
         @delete="handleDelete"
       />
@@ -82,6 +83,8 @@
 import GoalForm from '../components/GoalForm.vue'
 import GoalList from '../components/GoalList.vue'
 import { initDB, addGoal, getAllGoals, updateGoal, deleteGoal } from '../services/indexedDB'
+// 引入並使用進度服務
+import { getGoalProgress } from '../services/progressService'
 
 export default {
   name: 'GoalManagement',
@@ -95,6 +98,8 @@ export default {
       showForm: false,
       editingGoal: null,
       searchQuery: '',
+      // 新增進度更新觸發器
+      goalsUpdateTrigger: 0,
       notification: {
         show: false,
         message: '',
@@ -117,6 +122,17 @@ export default {
   async created() {
     await this.initializeDB()
     await this.loadGoals()
+    
+    // 設定定期更新進度的計時器（每分鐘更新一次）
+    this.progressUpdateInterval = setInterval(() => {
+      this.updateGoalsProgress()
+    }, 60000)
+  },
+  beforeUnmount() {
+    // 清除計時器
+    if (this.progressUpdateInterval) {
+      clearInterval(this.progressUpdateInterval)
+    }
   },
   methods: {
     async initializeDB() {
@@ -130,9 +146,19 @@ export default {
     async loadGoals() {
       try {
         this.goals = await getAllGoals()
+        await this.updateGoalsProgress()
       } catch (error) {
         console.error('載入目標失敗:', error)
         this.showNotification('載入目標失敗', 'error')
+      }
+    },
+    // 新增更新所有目標進度的方法
+    async updateGoalsProgress() {
+      try {
+        // 觸發 GoalList 組件重新獲取進度
+        this.goalsUpdateTrigger += 1
+      } catch (error) {
+        console.error('更新目標進度失敗:', error)
       }
     },
     async handleFormSubmit(goalData) {

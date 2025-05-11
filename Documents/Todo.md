@@ -1,5 +1,5 @@
 # TODO 任務清單
-# 當前 Snapshot 版本：v1.6.0
+# 當前 Snapshot 版本：v1.7.0
 
 ## 1. 目標管理 [Goal Management]
 
@@ -23,17 +23,15 @@
 - [x] 1.3.3 刪除目標功能
 - [x] 1.3.4 刪除前確認提示
 
+### 1.4 目標進度顯示 [Goal Progress Display]
+- [x] 1.4.1 更新目標進度顯示方式（根據頻率類型顯示本日/本週/本月進度）
+
 ## 2. 今日任務生成與追蹤 [Daily Task Generation and Tracking]
 
 ### 2.1 任務生成邏輯 [Task Generation Logic]
 - [x] 2.1.1 依據目標的設定頻率與完成次數產生今日任務(依據Documents\TaskGenerationLogicRules.md文件規則開發)，
 - [x] 2.1.2 當週完成後隱藏後續任務
 - [x] 2.1.3 非執行日不產生任務
-
-### 2.2 任務完成勾選 [Task Completion]
-- [ ] 2.2.1 勾選任務為完成
-- [ ] 2.2.2 更新 TaskLog 資料
-- [ ] 2.2.3 限制每日同任務僅可完成一次
 
 ## 3. 統計與進度視覺化 [Progress Visualization]
 

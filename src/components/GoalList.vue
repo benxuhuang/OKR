@@ -63,17 +63,17 @@
 
         <div class="flex items-center justify-between mb-2">
           <span class="text-sm text-gray-600 dark:text-gray-300">
-            本週進度：{{ goal.completedTimes || 0 }}/{{ goal.timesPerPeriod || 1 }}
+            {{ getProgressLabel(goal) }}：{{ goalProgress[goal.id]?.completed || 0 }}/{{ goalProgress[goal.id]?.target || goal.timesPerPeriod || 1 }}
           </span>
           <span class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
-            {{ calculateProgress(goal) }}%
+            {{ calculateProgressPercentage(goal) }}%
           </span>
         </div>
 
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
             class="bg-indigo-600 dark:bg-indigo-500 h-2 rounded-full transition-all duration-300"
-            :style="{ width: calculateProgress(goal) + '%' }"
+            :style="{ width: calculateProgressPercentage(goal) + '%' }"
           ></div>
         </div>
       </div>
@@ -110,6 +110,8 @@
 </template>
 
 <script>
+import { getGoalProgress } from '../services/progressService';
+
 export default {
   name: 'GoalList',
   props: {
@@ -123,6 +125,7 @@ export default {
       currentFilter: 'all',
       showDeleteConfirm: false,
       goalToDelete: null,
+      goalProgress: {}, // 存儲各目標的進度數據
       filters: [
         { label: '全部', value: 'all' },
         { label: '每日', value: 'day' },
@@ -139,7 +142,29 @@ export default {
       return this.goals.filter(goal => goal.frequencyType === this.currentFilter)
     }
   },
+  watch: {
+    goals: {
+      immediate: true,
+      handler(newGoals) {
+        if (newGoals && newGoals.length) {
+          this.fetchAllGoalsProgress();
+        }
+      }
+    }
+  },
   methods: {
+    async fetchAllGoalsProgress() {
+      const progressMap = {};
+      
+      for (const goal of this.goals) {
+        if (goal.id) {
+          const progress = await getGoalProgress(goal);
+          progressMap[goal.id] = progress;
+        }
+      }
+      
+      this.goalProgress = progressMap;
+    },
     getFilteredCount(filterValue) {
       if (filterValue === 'all') {
         return this.goals.length
@@ -162,6 +187,14 @@ export default {
       }
       return classes[type] || ''
     },
+    getProgressLabel(goal) {
+      const labels = {
+        day: '本日進度',
+        weekly: '本週進度',
+        monthly: '本月進度'
+      }
+      return labels[goal.frequencyType] || '進度'
+    },
     formatExecutionTime(goal) {
       if (!goal.daysOfWeek || !Array.isArray(goal.daysOfWeek)) {
         return goal.time || '未設定時間'
@@ -182,9 +215,16 @@ export default {
       
       return `${days} ${goal.time || ''}`
     },
-    calculateProgress(goal) {
-      if (!goal || !goal.timesPerPeriod) return 0
-      return Math.round(((goal.completedTimes || 0) / (goal.timesPerPeriod || 1)) * 100)
+    calculateProgressPercentage(goal) {
+      if (!goal || !goal.id) return 0;
+      
+      const progress = this.goalProgress[goal.id];
+      if (!progress) return 0;
+      
+      const { completed, target } = progress;
+      if (!target) return 0;
+      
+      return Math.round((completed / target) * 100);
     },
     confirmDelete(goal) {
       this.goalToDelete = goal
