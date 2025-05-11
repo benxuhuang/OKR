@@ -1,10 +1,10 @@
 <template>
   <div class="container mx-auto px-4 py-6 max-w-4xl">
     <!-- 目標管理標題與搜尋 -->
-    <div class="bg-white shadow rounded-lg mb-6 p-6">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6 p-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold text-gray-800">
-          <i class="fas fa-bullseye text-indigo-600 mr-2"></i>
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+          <i class="fas fa-bullseye text-indigo-600 dark:text-indigo-400 mr-2"></i>
           目標管理
         </h2>
         <div class="flex items-center">
@@ -13,12 +13,12 @@
               v-model="searchQuery"
               type="text"
               placeholder="搜尋目標..."
-              class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-200 focus:border-indigo-400 transition-all duration-200 outline-none"
+              class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 transition-all duration-200 outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
             >
-            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+            <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
           </div>
           <button
-            class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 flex items-center"
+            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors duration-200 flex items-center"
             @click="showForm = true"
           >
             <i class="fas fa-plus mr-2"></i>新增目標
@@ -48,7 +48,7 @@
     <div class="fixed bottom-6 right-6">
       <button
         v-if="!showForm"
-        class="bg-indigo-600 hover:bg-indigo-700 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110"
+        class="bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-800 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110"
         @click="showForm = true"
       >
         <i class="fas fa-plus text-xl"></i>
@@ -58,12 +58,12 @@
     <!-- 操作結果提示 -->
     <div
       v-if="notification.show"
-      class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center transition-all duration-300"
+      class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-gray-800 dark:bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center transition-all duration-300"
       :class="{
         'opacity-100': notification.show,
         'opacity-0': !notification.show,
-        'bg-green-700': notification.type === 'success',
-        'bg-red-700': notification.type === 'error'
+        'bg-green-700 dark:bg-green-800': notification.type === 'success',
+        'bg-red-700 dark:bg-red-800': notification.type === 'error'
       }"
     >
       <i

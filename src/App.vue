@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-100" :class="{ 'dark': isDarkMode }">
+  <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
     <nav class="bg-white shadow-md dark:bg-gray-800">
       <ul class="flex items-center justify-between px-6 py-3 max-w-4xl mx-auto">
         <li class="text-xl font-bold text-indigo-700 dark:text-indigo-400">
@@ -66,9 +66,6 @@ export default {
     const toggleDarkMode = () => {
       themeStore.toggleDarkMode();
     };
-
-    // 初始化主題
-    themeStore.initTheme();
     
     return {
       isDarkMode,
@@ -80,8 +77,4 @@ export default {
 
 <style>
 @import './style.css';
-
-.dark {
-  @apply bg-gray-900 text-gray-100;
-}
 </style> 

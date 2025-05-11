@@ -52,4 +52,10 @@ const pinia = createPinia()
 app.component('font-awesome-icon', FontAwesomeIcon)
 app.use(pinia)
 app.use(router)
+
+// 初始化主題
+import { useThemeStore } from './stores/themeStore'
+const themeStore = useThemeStore(pinia)
+themeStore.initTheme()
+
 app.mount('#app') 

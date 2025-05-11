@@ -1,24 +1,24 @@
 <template>
   <div class="container mx-auto px-4 py-6 max-w-4xl">
     <!-- 今日日期與進度概要 -->
-    <div class="bg-white shadow rounded-lg mb-6 p-6">
+    <div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6 p-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold text-gray-800">
-          <i class="far fa-calendar-check text-indigo-600 mr-2"></i>
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">
+          <i class="far fa-calendar-check text-indigo-600 dark:text-indigo-400 mr-2"></i>
           今日任務
         </h2>
         <div class="text-right">
-          <p class="text-gray-600 font-medium">{{ formattedDate }}</p>
-          <p class="text-sm text-indigo-600 font-medium">
+          <p class="text-gray-600 dark:text-gray-300 font-medium">{{ formattedDate }}</p>
+          <p class="text-sm text-indigo-600 dark:text-indigo-400 font-medium">
             已完成 {{ completedCount }}/{{ totalTasks }} 項任務
           </p>
         </div>
       </div>
       
       <!-- 進度條 -->
-      <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+      <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-4">
         <div 
-          class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" 
+          class="bg-indigo-600 dark:bg-indigo-500 h-2.5 rounded-full transition-all duration-300" 
           :style="{ width: progressPercentage + '%' }"
         ></div>
       </div>
@@ -31,8 +31,8 @@
           class="px-3 py-1 rounded-full text-sm font-medium transition-colors duration-200"
           :class="[
             currentFilter === filter.value 
-              ? 'bg-indigo-100 text-indigo-800' 
-              : 'bg-gray-100 text-gray-600 hover:bg-indigo-100 hover:text-indigo-800'
+              ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200' 
+              : 'bg-gray-100 text-gray-600 hover:bg-indigo-100 hover:text-indigo-800 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-indigo-900 dark:hover:text-indigo-200'
           ]"
           @click="currentFilter = filter.value"
         >
@@ -44,7 +44,7 @@
     <!-- 錯誤訊息 -->
     <div 
       v-if="error"
-      class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-6"
+      class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-200 px-4 py-3 rounded relative mb-6"
       role="alert"
     >
       <span class="block sm:inline">{{ error }}</span>
@@ -61,17 +61,17 @@
       v-if="loading"
       class="flex justify-center items-center py-8"
     >
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-      <span class="ml-2 text-gray-600">載入中...</span>
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600 dark:border-indigo-400"></div>
+      <span class="ml-2 text-gray-600 dark:text-gray-300">載入中...</span>
     </div>
 
     <!-- 無任務提示 -->
     <div 
       v-else-if="filteredTasks.length === 0"
-      class="bg-gray-50 rounded-lg p-8 text-center"
+      class="bg-gray-50 dark:bg-gray-800 rounded-lg p-8 text-center"
     >
-      <i class="far fa-calendar-check text-gray-400 text-4xl mb-4"></i>
-      <p class="text-gray-600">
+      <i class="far fa-calendar-check text-gray-400 dark:text-gray-600 text-4xl mb-4"></i>
+      <p class="text-gray-600 dark:text-gray-300">
         {{ currentFilter === 'all' ? '今日暫無任務' : '無符合條件的任務' }}
       </p>
     </div>
@@ -81,14 +81,14 @@
       <div 
         v-for="task in filteredTasks" 
         :key="task.id"
-        class="task-list-item bg-white shadow rounded-lg p-4 flex items-center transition-all duration-300"
+        class="task-list-item bg-white dark:bg-gray-800 shadow rounded-lg p-4 flex items-center transition-all duration-300"
         :class="{ 'opacity-75': task.status === 'completed' }"
       >
         <div class="flex-1">
           <div class="flex items-center">
             <input 
               type="checkbox" 
-              class="task-checkbox w-5 h-5 text-indigo-600 rounded mr-3 cursor-pointer transition-colors duration-200"
+              class="task-checkbox w-5 h-5 text-indigo-600 dark:text-indigo-500 rounded mr-3 cursor-pointer transition-colors duration-200"
               :checked="task.status === 'completed'"
               @change="toggleTaskStatus(task)"
             >
@@ -96,12 +96,12 @@
               class="task-title text-lg font-medium transition-all duration-200"
               :class="[
                 task.status === 'completed' 
-                  ? 'text-gray-400 line-through' 
-                  : 'text-gray-800'
+                  ? 'text-gray-400 dark:text-gray-500 line-through' 
+                  : 'text-gray-800 dark:text-gray-100'
               ]"
             >{{ task.title }}</span>
           </div>
-          <p class="text-gray-500 mt-1 ml-8">
+          <p class="text-gray-500 dark:text-gray-400 mt-1 ml-8">
             <i class="far fa-clock mr-1"></i>今日 {{ formatTime(task.time) }}
           </p>
         </div>
@@ -199,11 +199,11 @@ export default {
     const getStatusClass = (status) => {
       switch (status) {
         case 'completed':
-          return 'bg-green-100 text-green-800';
+          return 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
         case 'pending':
-          return 'bg-yellow-100 text-yellow-800';
+          return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
         default:
-          return 'bg-gray-100 text-gray-600';
+          return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
       }
     };
 

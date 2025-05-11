@@ -8,8 +8,8 @@
         class="px-3 py-1 rounded-full text-sm font-medium"
         :class="[
           currentFilter === filter.value
-            ? 'bg-indigo-100 text-indigo-800'
-            : 'bg-gray-100 text-gray-600 hover:bg-indigo-100 hover:text-indigo-800'
+            ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200'
+            : 'bg-gray-100 text-gray-600 hover:bg-indigo-100 hover:text-indigo-800 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-indigo-900 dark:hover:text-indigo-200'
         ]"
         @click="currentFilter = filter.value"
       >
@@ -22,13 +22,13 @@
       <div
         v-for="goal in filteredGoals"
         :key="goal.id"
-        class="goal-card bg-white shadow rounded-lg p-4 hover:shadow-lg transition-shadow duration-200"
+        class="goal-card bg-white dark:bg-gray-800 shadow rounded-lg p-4 hover:shadow-lg transition-shadow duration-200"
       >
         <div class="flex justify-between items-start mb-3">
-          <h3 class="text-lg font-medium text-gray-800">{{ goal.title || '未命名目標' }}</h3>
+          <h3 class="text-lg font-medium text-gray-800 dark:text-gray-100">{{ goal.title || '未命名目標' }}</h3>
           <div class="flex space-x-2">
             <button
-              class="p-2 rounded-lg hover:bg-indigo-100 text-indigo-600 transition-colors duration-200 flex items-center"
+              class="p-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 text-indigo-600 dark:text-indigo-400 transition-colors duration-200 flex items-center"
               @click="$emit('edit', goal)"
               title="編輯目標"
             >
@@ -36,7 +36,7 @@
               <span class="text-sm">編輯</span>
             </button>
             <button
-              class="p-2 rounded-lg hover:bg-red-100 text-red-600 transition-colors duration-200 flex items-center"
+              class="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400 transition-colors duration-200 flex items-center"
               @click="confirmDelete(goal)"
               title="刪除目標"
             >
@@ -46,7 +46,7 @@
           </div>
         </div>
         
-        <div class="flex items-center text-gray-600 mb-3 text-sm">
+        <div class="flex items-center text-gray-600 dark:text-gray-300 mb-3 text-sm">
           <span
             class="px-2 py-1 rounded-full text-xs mr-2"
             :class="getFrequencyTypeClass(goal.frequencyType)"
@@ -59,22 +59,22 @@
           </span>
         </div>
 
-        <p v-if="goal.description" class="text-gray-600 text-sm mb-3">
+        <p v-if="goal.description" class="text-gray-600 dark:text-gray-300 text-sm mb-3">
           {{ goal.description }}
         </p>
 
         <div class="flex items-center justify-between mb-2">
-          <span class="text-sm text-gray-600">
+          <span class="text-sm text-gray-600 dark:text-gray-300">
             本週進度：{{ goal.completedTimes || 0 }}/{{ goal.timesPerPeriod || 1 }}
           </span>
-          <span class="text-sm font-medium text-indigo-600">
+          <span class="text-sm font-medium text-indigo-600 dark:text-indigo-400">
             {{ calculateProgress(goal) }}%
           </span>
         </div>
 
-        <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
           <div
-            class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+            class="bg-indigo-600 dark:bg-indigo-500 h-2 rounded-full transition-all duration-300"
             :style="{ width: calculateProgress(goal) + '%' }"
           ></div>
         </div>
@@ -87,20 +87,20 @@
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
       @click.self="cancelDelete"
     >
-      <div class="bg-white rounded-lg p-6 max-w-sm mx-4 transform transition-all duration-300 scale-100 opacity-100 shadow-xl">
-        <h4 class="text-lg font-semibold mb-4">確認刪除</h4>
-        <p class="text-gray-600 mb-6">
+      <div class="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-sm mx-4 transform transition-all duration-300 scale-100 opacity-100 shadow-xl">
+        <h4 class="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-4">確認刪除</h4>
+        <p class="text-gray-600 dark:text-gray-300 mb-6">
           確定要刪除「{{ goalToDelete?.title }}」這個目標嗎？此操作無法復原。
         </p>
         <div class="flex justify-end space-x-4">
           <button
-            class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+            class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
             @click="cancelDelete"
           >
             取消
           </button>
           <button
-            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+            class="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-800 transition-colors duration-200"
             @click="confirmDeleteAction"
           >
             刪除
@@ -158,9 +158,9 @@ export default {
     },
     getFrequencyTypeClass(type) {
       const classes = {
-        day: 'bg-blue-100 text-blue-800',
-        weekly: 'bg-purple-100 text-purple-800',
-        monthly: 'bg-green-100 text-green-800'
+        day: 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+        weekly: 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
+        monthly: 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
       }
       return classes[type] || ''
     },
