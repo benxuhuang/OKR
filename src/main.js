@@ -31,7 +31,12 @@ import {
   faCheckCircle,
   faQuestionCircle,
   faExclamationTriangle,
-  faTimesCircle
+  faTimesCircle,
+  faChevronLeft,
+  faChevronRight,
+  faTimes,
+  faFire,
+  faInfoCircle
 } from '@fortawesome/free-solid-svg-icons'
 
 /* Add icons to the library */
@@ -57,7 +62,12 @@ library.add(
   faCheckCircle,
   faQuestionCircle,
   faExclamationTriangle,
-  faTimesCircle
+  faTimesCircle,
+  faChevronLeft,
+  faChevronRight,
+  faTimes,
+  faFire,
+  faInfoCircle
 )
 
 const app = createApp(App)

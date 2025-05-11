@@ -38,6 +38,32 @@
           </li>
           <li>
             <router-link 
+              to="/weekly-stats" 
+              class="px-3 py-2 rounded-md font-medium"
+              :class="[
+                $route.path === '/weekly-stats' 
+                  ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200' 
+                  : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+              ]"
+            >
+              <font-awesome-icon icon="chart-bar" class="mr-1" />週統計
+            </router-link>
+          </li>
+          <li>
+            <router-link 
+              to="/monthly-stats" 
+              class="px-3 py-2 rounded-md font-medium"
+              :class="[
+                $route.path === '/monthly-stats' 
+                  ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200' 
+                  : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+              ]"
+            >
+              <font-awesome-icon icon="calendar-alt" class="mr-1" />月統計
+            </router-link>
+          </li>
+          <li>
+            <router-link 
               to="/settings" 
               class="px-3 py-2 rounded-md font-medium"
               :class="[
@@ -68,13 +94,13 @@
           >
             <font-awesome-icon icon="bars" />
           </button>
-          <button 
+          <!-- <button 
             @click="toggleDarkMode" 
             class="p-2 rounded-md text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
             aria-label="切換主題"
           >
             <font-awesome-icon :icon="isDarkMode ? 'sun' : 'moon'" />
-          </button>
+          </button> -->
         </div>
       </div>
 
@@ -107,6 +133,30 @@
             @click="mobileMenuOpen = false"
           >
             <font-awesome-icon icon="bullseye" class="mr-1" />目標管理
+          </router-link>
+          <router-link 
+            to="/weekly-stats" 
+            class="block px-3 py-2 rounded-md font-medium"
+            :class="[
+              $route.path === '/weekly-stats' 
+                ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200' 
+                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+            ]"
+            @click="mobileMenuOpen = false"
+          >
+            <font-awesome-icon icon="chart-bar" class="mr-1" />週統計
+          </router-link>
+          <router-link 
+            to="/monthly-stats" 
+            class="block px-3 py-2 rounded-md font-medium"
+            :class="[
+              $route.path === '/monthly-stats' 
+                ? 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200' 
+                : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+            ]"
+            @click="mobileMenuOpen = false"
+          >
+            <font-awesome-icon icon="calendar-alt" class="mr-1" />月統計
           </router-link>
           <router-link 
             to="/settings" 
