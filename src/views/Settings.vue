@@ -13,7 +13,7 @@
           </div>
           <button 
             @click="exportData" 
-            class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-600 transition-colors"
           >
             <font-awesome-icon icon="download" class="mr-2" />
             匯出
@@ -27,7 +27,7 @@
           </div>
           <button 
             @click="importData" 
-            class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors"
+            class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-green-600 transition-colors"
           >
             <font-awesome-icon icon="upload" class="mr-2" />
             匯入

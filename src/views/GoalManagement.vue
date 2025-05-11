@@ -21,7 +21,7 @@
             class="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors duration-200 flex items-center"
             @click="showForm = true"
           >
-            <i class="fas fa-plus mr-2"></i>新增目標
+            <i class="fas fa-plus mr-2"></i>新增
           </button>
         </div>
       </div>
@@ -51,7 +51,7 @@
         class="bg-indigo-600 dark:bg-indigo-700 hover:bg-indigo-700 dark:hover:bg-indigo-800 text-white rounded-full w-14 h-14 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110"
         @click="showForm = true"
       >
-        <i class="fas fa-plus text-xl"></i>
+        <font-awesome-icon icon="plus" class="text-lg" />
       </button>
     </div>
 
