@@ -25,7 +25,13 @@ import {
   faMoon,
   faDownload,
   faUpload,
-  faBars
+  faBars,
+  faBell,
+  faBellSlash,
+  faCheckCircle,
+  faQuestionCircle,
+  faExclamationTriangle,
+  faTimesCircle
 } from '@fortawesome/free-solid-svg-icons'
 
 /* Add icons to the library */
@@ -45,7 +51,13 @@ library.add(
   faMoon,
   faDownload,
   faUpload,
-  faBars
+  faBars,
+  faBell,
+  faBellSlash,
+  faCheckCircle,
+  faQuestionCircle,
+  faExclamationTriangle,
+  faTimesCircle
 )
 
 const app = createApp(App)
@@ -59,5 +71,10 @@ app.use(router)
 import { useThemeStore } from './stores/themeStore'
 const themeStore = useThemeStore(pinia)
 themeStore.initTheme()
+
+// 初始化通知設定
+import { useNotificationStore } from './stores/notificationStore'
+const notificationStore = useNotificationStore(pinia)
+notificationStore.initNotificationSettings()
 
 app.mount('#app') 

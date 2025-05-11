@@ -1,0 +1,192 @@
+{
+  "project_name": "OKR 系統",
+  "snapshot_version": "1.6.0",
+  "created_at": "2024-06-26T10:00:00Z",
+  "features": [
+    {
+      "feature_id": "1.2.1",
+      "name": "推播通知邏輯",
+      "description": "依照今日任務的項目執行時間前五分鐘發送瀏覽器桌面通知訊息",
+      "implementation": {
+        "files": [
+          "src/services/notificationService.js",
+          "src/services/reminderService.js",
+          "src/stores/notificationStore.js",
+          "src/views/Settings.vue",
+          "src/main.js"
+        ],
+        "changes": [
+          "實作瀏覽器通知API功能封裝",
+          "建立定時檢查任務時間的提醒服務",
+          "實作通知狀態和權限管理",
+          "新增通知設定UI至設定頁面"
+        ]
+      }
+    },
+    {
+      "feature_id": "1.2.2",
+      "name": "瀏覽器通知授權請求處理",
+      "description": "處理瀏覽器通知權限請求和各種狀態的回應",
+      "implementation": {
+        "files": [
+          "src/services/notificationService.js",
+          "src/stores/notificationStore.js",
+          "src/views/Settings.vue"
+        ],
+        "changes": [
+          "實作權限請求功能",
+          "處理權限狀態管理",
+          "顯示不同權限狀態下的UI提示"
+        ]
+      }
+    },
+    {
+      "feature_id": "1.2.3",
+      "name": "使用者瀏覽器背景常駐偵測",
+      "description": "實作瀏覽器背景運行監測和喚醒機制",
+      "implementation": {
+        "files": [
+          "src/services/reminderService.js",
+          "src/stores/notificationStore.js",
+          "src/views/Settings.vue"
+        ],
+        "changes": [
+          "實作頁面可見性API監測",
+          "實作背景活動偵測",
+          "新增背景監測UI開關選項"
+        ]
+      }
+    }
+  ],
+  "change_log": [
+    {
+      "version": "1.6.0",
+      "date": "2024-06-26",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "新增目標提醒通知功能，可在任務執行前5分鐘收到通知"
+        },
+        {
+          "type": "feature",
+          "description": "實作瀏覽器權限管理，處理不同通知權限狀態"
+        },
+        {
+          "type": "feature",
+          "description": "實作瀏覽器背景常駐偵測，保持通知服務活躍"
+        },
+        {
+          "type": "enhancement",
+          "description": "優化設定頁面UI，加入通知相關設定選項"
+        }
+      ]
+    }
+  ],
+  "inherited_features": [
+    {
+      "feature_id": "5.4",
+      "name": "今日任務清單排版優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.1",
+      "name": "任務頻率類型標籤顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.2",
+      "name": "任務清單固定高度與滾動條",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.3",
+      "name": "目標清單佈局優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.5",
+      "name": "修復行動版導航選單",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.1",
+      "name": "響應式導航欄",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.2",
+      "name": "目標管理頁面優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.3",
+      "name": "頻率與日期顯示優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.4",
+      "name": "設定頁面統一佈局",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.1",
+      "name": "任務時間排序",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.2",
+      "name": "任務頻率資訊顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.3",
+      "name": "資料庫重設功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.4",
+      "name": "資料匯出功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.5",
+      "name": "資料匯入功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.6",
+      "name": "深色模式",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.1",
+      "name": "建立目標",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.1",
+      "name": "目標列表",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.2",
+      "name": "編輯目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.3",
+      "name": "刪除目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.4",
+      "name": "刪除前確認提示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "2.1",
+      "name": "今日任務生成邏輯",
+      "status": "inherited"
+    }
+  ]
+} 
