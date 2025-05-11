@@ -92,16 +92,16 @@
       <!-- 每日完成趨勢圖 -->
       <div class="md:col-span-2 bg-white dark:bg-gray-800 shadow rounded-lg p-4">
         <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">本週任務完成趨勢</h3>
-        <div class="h-64">
-          <canvas ref="weeklyTrendChart"></canvas>
+        <div class="h-64 min-h-[200px] chart-container">
+          <canvas ref="weeklyTrendChart" width="400" height="200"></canvas>
         </div>
       </div>
       
       <!-- 目標分類比例圖 -->
       <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-4">
         <h3 class="text-lg font-medium text-gray-800 dark:text-gray-200 mb-4">目標分類比例</h3>
-        <div class="h-64">
-          <canvas ref="goalCategoryChart"></canvas>
+        <div class="h-64 min-h-[200px] chart-container">
+          <canvas ref="goalCategoryChart" width="400" height="200"></canvas>
         </div>
       </div>
       
@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
 import Chart from 'chart.js/auto';
 import { 
   getWeekDates, 
@@ -219,7 +219,8 @@ export default {
         goalCategoryData.value = categoryData;
         goalsProgress.value = progressData;
         
-        // 更新圖表
+        // 確保數據更新後，等待下一個tick再更新圖表
+        await nextTick();
         updateCharts();
       } catch (err) {
         console.error('載入週統計數據失敗:', err);
@@ -236,6 +237,12 @@ export default {
     };
     
     const updateCharts = () => {
+      // 確保元素存在
+      if (!weeklyTrendChart_ref.value || !goalCategoryChart_ref.value) {
+        console.log('圖表容器還未準備好，稍後再嘗試繪製圖表');
+        return;
+      }
+      
       // 清除舊圖表
       if (weeklyTrendChart) {
         weeklyTrendChart.destroy();
@@ -246,11 +253,17 @@ export default {
       
       // 創建週趨勢圖
       if (weeklyTrendChart_ref.value) {
+        const ctx = weeklyTrendChart_ref.value.getContext('2d');
+        if (!ctx) {
+          console.error('無法獲取週趨勢圖繪製上下文');
+          return;
+        }
+        
         const labels = weekTrendData.value.map(day => day.weekday);
         const completedData = weekTrendData.value.map(day => day.completed);
         const totalData = weekTrendData.value.map(day => day.total);
         
-        weeklyTrendChart = new Chart(weeklyTrendChart_ref.value.getContext('2d'), {
+        weeklyTrendChart = new Chart(ctx, {
           type: 'line',
           data: {
             labels,
@@ -297,13 +310,38 @@ export default {
       
       // 創建目標分類比例圖
       if (goalCategoryChart_ref.value) {
+        const ctx = goalCategoryChart_ref.value.getContext('2d');
+        if (!ctx) {
+          console.error('無法獲取目標分類比例圖繪製上下文');
+          return;
+        }
+        
         const { day, weekly, monthly } = goalCategoryData.value;
+        
+        // 檢查數據是否有效
+        if (day === undefined || weekly === undefined || monthly === undefined) {
+          console.error('目標分類數據不完整，無法繪製圖表');
+          return;
+        }
+        
+        // 檢查是否有數據（如果全部為0則顯示提示信息）
+        const totalGoals = day + weekly + monthly;
+        if (totalGoals === 0) {
+          // 如果沒有數據，可以繪製一個特殊的空狀態圖表或者不繪製
+          console.log('沒有目標分類數據可顯示');
+          // 清除舊圖表但不繪製新的
+          if (goalCategoryChart) {
+            goalCategoryChart.destroy();
+            goalCategoryChart = null;
+          }
+          return;
+        }
         
         // 獲取深色模式狀態以調整顏色
         const isDarkMode = document.documentElement.classList.contains('dark');
         const textColor = isDarkMode ? '#e5e7eb' : '#374151';
         
-        goalCategoryChart = new Chart(goalCategoryChart_ref.value.getContext('2d'), {
+        goalCategoryChart = new Chart(ctx, {
           type: 'doughnut',
           data: {
             labels: ['每日', '每週', '每月'],
@@ -345,14 +383,40 @@ export default {
       }
     };
     
+    // 添加在 setup 函數中，負責檢查並延遲初始化圖表
+    const initChartsWithDelay = () => {
+      // 確保圖表容器已渲染並有尺寸
+      setTimeout(() => {
+        if (weeklyTrendChart_ref.value && 
+            goalCategoryChart_ref.value && 
+            !loading.value) {
+          console.log('延遲初始化圖表');
+          updateCharts();
+        }
+      }, 100); // 100ms延遲，給DOM渲染一些時間
+    };
+    
     // 監聽週日期變化
-    watch(currentWeekDate, () => {
-      loadWeeklyStats();
+    watch(currentWeekDate, async () => {
+      await loadWeeklyStats();
+      nextTick(() => {
+        updateCharts();
+      });
     });
     
     // 生命週期鉤子
-    onMounted(() => {
-      loadWeeklyStats();
+    onMounted(async () => {
+      await loadWeeklyStats();
+      
+      // 使用 nextTick 確保DOM已更新後再初始化圖表
+      nextTick(() => {
+        updateCharts();
+        // 額外的延遲初始化，以防第一次嘗試失敗
+        initChartsWithDelay();
+        
+        // 添加視窗大小調整事件監聽，當視窗調整大小時重繪圖表
+        window.addEventListener('resize', updateCharts);
+      });
       
       // 監聽深色模式變化，更新圖表
       const observer = new MutationObserver(() => {
@@ -366,6 +430,7 @@ export default {
       
       return () => {
         observer.disconnect();
+        window.removeEventListener('resize', updateCharts);
       };
     });
     
@@ -412,5 +477,16 @@ export default {
 .stat-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .chart-container {
+    min-height: 180px;
+  }
 }
 </style> 
