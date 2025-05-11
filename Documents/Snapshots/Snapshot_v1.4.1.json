@@ -1,0 +1,165 @@
+{
+  "project_name": "OKR 系統",
+  "snapshot_version": "1.4.1",
+  "created_at": "2024-06-21T10:00:00Z",
+  "features": [
+    {
+      "feature_id": "4.5",
+      "name": "修復行動版導航選單",
+      "description": "修復手機模式下導航欄漢堡選單按鈕不顯示的問題",
+      "implementation": {
+        "files": [
+          "src/App.vue",
+          "src/main.js"
+        ],
+        "changes": [
+          "添加 faBars 圖標至 Font Awesome 庫",
+          "優化行動版選單按鈕樣式",
+          "提高行動版按鈕的可用性"
+        ]
+      }
+    }
+  ],
+  "change_log": [
+    {
+      "version": "1.4.1",
+      "date": "2024-06-21",
+      "changes": [
+        {
+          "type": "bugfix",
+          "description": "修復手機模式下導航欄選單按鈕不顯示的問題"
+        }
+      ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2024-06-20",
+      "changes": [
+        {
+          "type": "enhancement",
+          "description": "優化手機顯示畫面，改進導航欄響應式設計"
+        },
+        {
+          "type": "enhancement",
+          "description": "優化目標管理頁面搜尋區塊佈局"
+        },
+        {
+          "type": "enhancement",
+          "description": "改善頻率與日期顯示，避免文字換行問題"
+        },
+        {
+          "type": "enhancement",
+          "description": "統一設定頁面按鈕與描述文字寬度"
+        }
+      ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2024-06-16",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "新增任務時間排序功能"
+        },
+        {
+          "type": "feature",
+          "description": "新增任務頻率資訊顯示"
+        },
+        {
+          "type": "feature",
+          "description": "新增資料庫重設功能"
+        },
+        {
+          "type": "feature",
+          "description": "新增資料匯出/匯入功能"
+        },
+        {
+          "type": "feature",
+          "description": "新增深色模式支援"
+        }
+      ]
+    }
+  ],
+  "inherited_features": [
+    {
+      "feature_id": "4.1",
+      "name": "響應式導航欄",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.2",
+      "name": "目標管理頁面優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.3",
+      "name": "頻率與日期顯示優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.4",
+      "name": "設定頁面統一佈局",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.1",
+      "name": "任務時間排序",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.2",
+      "name": "任務頻率資訊顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.3",
+      "name": "資料庫重設功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.4",
+      "name": "資料匯出功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.5",
+      "name": "資料匯入功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.6",
+      "name": "深色模式",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.1",
+      "name": "建立目標",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.1",
+      "name": "目標列表",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.2",
+      "name": "編輯目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.3",
+      "name": "刪除目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.4",
+      "name": "刪除前確認提示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "2.1",
+      "name": "今日任務生成邏輯",
+      "status": "inherited"
+    }
+  ]
+} 

@@ -44,14 +44,14 @@
           </div>
         </div>
         
-        <div class="flex items-center text-gray-600 dark:text-gray-300 mb-3 text-sm">
+        <div class="flex flex-wrap items-center text-gray-600 dark:text-gray-300 mb-3 text-sm gap-2">
           <span
-            class="px-2 py-1 rounded-full text-xs mr-2"
+            class="px-2 py-1 rounded-full text-xs"
             :class="getFrequencyTypeClass(goal.frequencyType)"
           >
             {{ getFrequencyTypeLabel(goal.frequencyType || 'day') }}
           </span>
-          <span v-if="goal.time || goal.daysOfWeek?.length">
+          <span v-if="goal.time || goal.daysOfWeek?.length" class="truncate max-w-full">
             <font-awesome-icon icon="clock" class="mr-1" />
             {{ formatExecutionTime(goal) }}
           </span>
@@ -169,13 +169,13 @@ export default {
       
       const days = goal.daysOfWeek.map(day => {
         const dayLabels = {
-          Monday: '週一',
-          Tuesday: '週二',
-          Wednesday: '週三',
-          Thursday: '週四',
-          Friday: '週五',
-          Saturday: '週六',
-          Sunday: '週日'
+          Monday: '一',
+          Tuesday: '二',
+          Wednesday: '三',
+          Thursday: '四',
+          Friday: '五',
+          Saturday: '六',
+          Sunday: '日'
         }
         return dayLabels[day]
       }).join('、')

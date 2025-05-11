@@ -24,7 +24,8 @@ import {
   faSun,
   faMoon,
   faDownload,
-  faUpload
+  faUpload,
+  faBars
 } from '@fortawesome/free-solid-svg-icons'
 
 /* Add icons to the library */
@@ -43,7 +44,8 @@ library.add(
   faSun,
   faMoon,
   faDownload,
-  faUpload
+  faUpload,
+  faBars
 )
 
 const app = createApp(App)

@@ -6,46 +6,52 @@
       <h2 class="text-xl font-semibold mb-4 dark:text-gray-200">資料管理</h2>
       
       <div class="space-y-4">
-        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-          <div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg items-center">
+          <div class="md:col-span-3">
             <h3 class="font-medium dark:text-gray-200">匯出資料</h3>
             <p class="text-sm text-gray-600 dark:text-gray-400">將所有目標和任務資料匯出為 JSON 檔案</p>
           </div>
-          <button 
-            @click="exportData" 
-            class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-          >
-            <font-awesome-icon icon="download" class="mr-2" />
-            匯出
-          </button>
+          <div class="md:col-span-1 flex justify-end">
+            <button 
+              @click="exportData" 
+              class="w-full md:w-auto px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            >
+              <font-awesome-icon icon="download" class="mr-2" />
+              匯出
+            </button>
+          </div>
         </div>
 
-        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-          <div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg items-center">
+          <div class="md:col-span-3">
             <h3 class="font-medium dark:text-gray-200">匯入資料</h3>
             <p class="text-sm text-gray-600 dark:text-gray-400">從 JSON 檔案匯入目標和任務資料</p>
           </div>
-          <button 
-            @click="importData" 
-            class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-green-600 transition-colors"
-          >
-            <font-awesome-icon icon="upload" class="mr-2" />
-            匯入
-          </button>
+          <div class="md:col-span-1 flex justify-end">
+            <button 
+              @click="importData" 
+              class="w-full md:w-auto px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-green-600 transition-colors"
+            >
+              <font-awesome-icon icon="upload" class="mr-2" />
+              匯入
+            </button>
+          </div>
         </div>
 
-        <div class="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-          <div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg items-center">
+          <div class="md:col-span-3">
             <h3 class="font-medium dark:text-gray-200">重設資料庫</h3>
             <p class="text-sm text-gray-600 dark:text-gray-400">清除所有資料並重設資料庫（此操作無法復原）</p>
           </div>
-          <button 
-            @click="resetDatabase" 
-            class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-          >
-            <font-awesome-icon icon="trash" class="mr-2" />
-            重設
-          </button>
+          <div class="md:col-span-1 flex justify-end">
+            <button 
+              @click="resetDatabase" 
+              class="w-full md:w-auto px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+            >
+              <font-awesome-icon icon="trash" class="mr-2" />
+              重設
+            </button>
+          </div>
         </div>
       </div>
     </div>

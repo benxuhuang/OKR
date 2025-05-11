@@ -2,28 +2,26 @@
   <div class="container mx-auto px-4 py-6 max-w-4xl">
     <!-- 目標管理標題與搜尋 -->
     <div class="bg-white dark:bg-gray-800 shadow rounded-lg mb-6 p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">
-          <i class="fas fa-bullseye text-indigo-600 dark:text-indigo-400 mr-2"></i>
-          目標管理
-        </h2>
-        <div class="flex items-center">
-          <div class="relative mr-2">
-            <input
-              v-model="searchQuery"
-              type="text"
-              placeholder="搜尋目標..."
-              class="pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 transition-all duration-200 outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
-            >
-            <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
-          </div>
-          <button
-            class="px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors duration-200 flex items-center"
-            @click="showForm = true"
+      <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">
+        <i class="fas fa-bullseye text-indigo-600 dark:text-indigo-400 mr-2"></i>
+        目標管理
+      </h2>
+      <div class="flex flex-col sm:flex-row justify-between items-center space-y-3 sm:space-y-0">
+        <div class="relative w-full sm:w-auto sm:flex-1 sm:mr-2">
+          <input
+            v-model="searchQuery"
+            type="text"
+            placeholder="搜尋目標..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 transition-all duration-200 outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
           >
-            <i class="fas fa-plus mr-2"></i>新增
-          </button>
+          <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
         </div>
+        <button
+          class="w-full sm:w-auto px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors duration-200 flex items-center justify-center"
+          @click="showForm = true"
+        >
+          <i class="fas fa-plus mr-2"></i>新增
+        </button>
       </div>
     </div>
 

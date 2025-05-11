@@ -1,0 +1,155 @@
+{
+  "project_name": "OKR 系統",
+  "snapshot_version": "1.4.0",
+  "created_at": "2024-06-20T10:00:00Z",
+  "features": [
+    {
+      "feature_id": "4.1",
+      "name": "響應式導航欄",
+      "description": "導航欄在手機顯示時優化為下拉選單，防止文字跳行",
+      "implementation": {
+        "file": "src/App.vue",
+        "method": "使用媒體查詢實現響應式設計"
+      }
+    },
+    {
+      "feature_id": "4.2",
+      "name": "目標管理頁面優化",
+      "description": "目標管理標題與搜尋欄位在手機版分行顯示，改善使用體驗",
+      "implementation": {
+        "file": "src/views/GoalManagement.vue",
+        "method": "使用 flex-col 並針對不同螢幕尺寸調整佈局"
+      }
+    },
+    {
+      "feature_id": "4.3",
+      "name": "頻率與日期顯示優化",
+      "description": "簡化日期顯示格式，省略「週」字，防止長文字換行",
+      "implementation": {
+        "file": "src/components/GoalList.vue",
+        "method": "修改 formatExecutionTime 方法"
+      }
+    },
+    {
+      "feature_id": "4.4",
+      "name": "設定頁面統一佈局",
+      "description": "統一設定頁面的按鈕與描述文字寬度，提高一致性",
+      "implementation": {
+        "file": "src/views/Settings.vue",
+        "method": "使用 grid 系統進行統一佈局"
+      }
+    }
+  ],
+  "change_log": [
+    {
+      "version": "1.4.0",
+      "date": "2024-06-20",
+      "changes": [
+        {
+          "type": "enhancement",
+          "description": "優化手機顯示畫面，改進導航欄響應式設計"
+        },
+        {
+          "type": "enhancement",
+          "description": "優化目標管理頁面搜尋區塊佈局"
+        },
+        {
+          "type": "enhancement",
+          "description": "改善頻率與日期顯示，避免文字換行問題"
+        },
+        {
+          "type": "enhancement",
+          "description": "統一設定頁面按鈕與描述文字寬度"
+        }
+      ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2024-06-16",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "新增任務時間排序功能"
+        },
+        {
+          "type": "feature",
+          "description": "新增任務頻率資訊顯示"
+        },
+        {
+          "type": "feature",
+          "description": "新增資料庫重設功能"
+        },
+        {
+          "type": "feature",
+          "description": "新增資料匯出/匯入功能"
+        },
+        {
+          "type": "feature",
+          "description": "新增深色模式支援"
+        }
+      ]
+    }
+  ],
+  "inherited_features": [
+    {
+      "feature_id": "3.1",
+      "name": "任務時間排序",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.2",
+      "name": "任務頻率資訊顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.3",
+      "name": "資料庫重設功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.4",
+      "name": "資料匯出功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.5",
+      "name": "資料匯入功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.6",
+      "name": "深色模式",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.1",
+      "name": "建立目標",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.1",
+      "name": "目標列表",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.2",
+      "name": "編輯目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.3",
+      "name": "刪除目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.4",
+      "name": "刪除前確認提示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "2.1",
+      "name": "今日任務生成邏輯",
+      "status": "inherited"
+    }
+  ]
+} 
