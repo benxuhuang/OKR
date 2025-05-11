@@ -1,10 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import GoalManagement from '../views/GoalManagement.vue'
+import TodayTasks from '../views/TodayTasks.vue'
+import WeeklyStats from '../views/WeeklyStats.vue'
+import MonthlyStats from '../views/MonthlyStats.vue'
 
 const routes = [
   {
     path: '/',
-    redirect: '/goals'
+    redirect: '/today-tasks'
+  },
+  {
+    path: '/today-tasks',
+    name: 'TodayTasks',
+    component: TodayTasks
   },
   {
     path: '/goals',
@@ -12,19 +20,14 @@ const routes = [
     component: GoalManagement
   },
   {
-    path: '/today',
-    name: 'Today',
-    component: () => import('../views/TodayTasks.vue')
+    path: '/weekly-stats',
+    name: 'WeeklyStats',
+    component: WeeklyStats
   },
   {
-    path: '/weekly',
-    name: 'Weekly',
-    component: () => import('../views/WeeklyStats.vue')
-  },
-  {
-    path: '/monthly',
+    path: '/monthly-stats',
     name: 'Monthly',
-    component: () => import('../views/MonthlyStats.vue')
+    component: MonthlyStats
   }
 ]
 

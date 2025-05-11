@@ -1,141 +1,307 @@
-// IndexedDB 服務
+import { openDB, deleteDB } from 'idb';
+
 const DB_NAME = 'okr_system';
-const DB_VERSION = 1;
-const STORE_NAME = 'goals';
+const DB_VERSION = 2;
+const GOAL_STORE = 'goals';
+const TASK_STORE = 'tasks';
 
-export const initDB = () => {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onerror = (event) => {
-      console.error('Database error:', event.target.error);
-      reject('無法開啟資料庫');
-    };
-
-    request.onsuccess = (event) => {
-      resolve(event.target.result);
-    };
-
-    request.onupgradeneeded = (event) => {
-      const db = event.target.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-        // 建立索引
-        store.createIndex('title', 'title', { unique: false });
-        store.createIndex('frequencyType', 'frequencyType', { unique: false });
-        store.createIndex('createdAt', 'createdAt', { unique: false });
-      }
-    };
-  });
+// 英文星期對照表
+const WEEKDAY_MAP = {
+  'Sunday': 0,
+  'Monday': 1,
+  'Tuesday': 2,
+  'Wednesday': 3,
+  'Thursday': 4,
+  'Friday': 5,
+  'Saturday': 6
 };
 
-export const addGoal = (goal) => {
-  return new Promise((resolve, reject) => {
-    if (!goal || typeof goal !== 'object') {
-      reject('無效的目標資料');
-      return;
+// 所有星期
+const ALL_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+// 刪除現有資料庫
+export const resetDatabase = async () => {
+  console.log('重置資料庫...');
+  try {
+    await deleteDB(DB_NAME);
+    console.log('資料庫已刪除');
+  } catch (error) {
+    console.error('刪除資料庫失敗:', error);
+  }
+};
+
+// 初始化資料庫
+export const initDB = async () => {
+  console.log('初始化資料庫...');
+  try {
+    const db = await openDB(DB_NAME, DB_VERSION, {
+      upgrade(db, oldVersion, newVersion, transaction) {
+        console.log(`資料庫升級: ${oldVersion} -> ${newVersion}`);
+        
+        // 如果是新建資料庫，oldVersion 會是 0
+        if (oldVersion < 1) {
+          // 建立目標資料表
+          if (!db.objectStoreNames.contains(GOAL_STORE)) {
+            console.log('建立目標資料表...');
+            const goalStore = db.createObjectStore(GOAL_STORE, { keyPath: 'id' });
+            goalStore.createIndex('title', 'title', { unique: false });
+            goalStore.createIndex('frequencyType', 'frequencyType', { unique: false });
+            goalStore.createIndex('createdAt', 'createdAt', { unique: false });
+          }
+          
+          // 建立任務資料表
+          if (!db.objectStoreNames.contains(TASK_STORE)) {
+            console.log('建立任務資料表...');
+            const taskStore = db.createObjectStore(TASK_STORE, { keyPath: 'id', autoIncrement: true });
+            taskStore.createIndex('date', 'date');
+            taskStore.createIndex('goalId', 'goalId');
+            taskStore.createIndex('status', 'status');
+          }
+        }
+      }
+    });
+
+    console.log('資料庫初始化成功');
+    return db;
+  } catch (error) {
+    console.error('資料庫初始化失敗:', error);
+    throw error;
+  }
+};
+
+// 目標相關操作
+export const addGoal = async (goal) => {
+  console.log('新增目標:', goal);
+  if (!goal || typeof goal !== 'object') {
+    throw new Error('無效的目標資料');
+  }
+
+  // 如果是每日目標，自動填入所有星期
+  const daysOfWeek = goal.frequencyType === 'day' ? ALL_DAYS : 
+    (Array.isArray(goal.daysOfWeek) ? [...goal.daysOfWeek] : []);
+
+  const safeGoal = {
+    ...goal,
+    daysOfWeek,
+    createdAt: goal.createdAt || new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+
+  try {
+    const db = await initDB();
+    const result = await db.add(GOAL_STORE, safeGoal);
+    console.log('目標新增成功:', result);
+    return result;
+  } catch (error) {
+    console.error('新增目標失敗:', error);
+    throw error;
+  }
+};
+
+export const getAllGoals = async () => {
+  console.log('獲取所有目標...');
+  try {
+    const db = await initDB();
+    const goals = await db.getAll(GOAL_STORE);
+    console.log('獲取目標成功:', goals);
+    return goals;
+  } catch (error) {
+    console.error('獲取目標失敗:', error);
+    throw error;
+  }
+};
+
+export const updateGoal = async (goal) => {
+  console.log('更新目標:', goal);
+  try {
+    // 如果是每日目標，確保包含所有星期
+    if (goal.frequencyType === 'day') {
+      goal.daysOfWeek = ALL_DAYS;
+    }
+    
+    const db = await initDB();
+    const result = await db.put(GOAL_STORE, goal);
+    console.log('目標更新成功:', result);
+    return result;
+  } catch (error) {
+    console.error('更新目標失敗:', error);
+    throw error;
+  }
+};
+
+export const deleteGoal = async (id) => {
+  const db = await initDB();
+  return db.delete(GOAL_STORE, id);
+};
+
+// 任務相關操作
+export const getTodayTasks = async () => {
+  console.log('獲取今日任務...');
+  try {
+    const db = await initDB();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const todayStr = today.toLocaleDateString('zh-TW', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).replace(/\//g, '-');
+    
+    console.log('今日日期:', todayStr);
+    
+    // 獲取所有目標
+    const goals = await getAllGoals();
+    console.log('所有目標:', goals);
+
+    // 獲取今日已存在的任務
+    const existingTasks = await db.getAllFromIndex(TASK_STORE, 'date', todayStr);
+    console.log('已存在的今日任務:', existingTasks);
+
+    // 檢查每個目標是否需要生成任務
+    const newTasks = [];
+    const date = new Date(todayStr);
+    const dayOfWeek = date.getDay();
+    const todayName = ALL_DAYS[dayOfWeek];
+    console.log('當前星期:', todayName);
+
+    for (const goal of goals) {
+      console.log('檢查目標:', goal.title);
+      
+      // 檢查是否已經存在此目標的任務
+      const existingTask = existingTasks.find(task => task.goalId === goal.id);
+      
+      if (!existingTask) {
+        console.log('目標尚未生成今日任務');
+        
+        // 如果是每日目標或今天是執行日，則檢查是否應該生成任務
+        if (goal.frequencyType === 'day' || goal.daysOfWeek.includes(todayName)) {
+          console.log('今天是執行日或為每日目標');
+          const shouldGenerate = await shouldGenerateTaskForGoal(goal, date);
+          if (shouldGenerate) {
+            console.log('將生成任務');
+            newTasks.push({
+              goalId: goal.id,
+              title: goal.title,
+              date: todayStr,
+              time: goal.time,
+              status: 'pending',
+              frequencyType: goal.frequencyType,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString()
+            });
+          }
+        } else {
+          console.log('今天不是執行日');
+        }
+      } else {
+        console.log('目標已有今日任務');
+      }
     }
 
-    // 確保資料可以被序列化
-    const safeGoal = {
-      ...goal,
-      daysOfWeek: Array.isArray(goal.daysOfWeek) ? [...goal.daysOfWeek] : [],
-      createdAt: goal.createdAt || new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
+    // 如果有新任務需要生成
+    if (newTasks.length > 0) {
+      console.log('新增新任務:', newTasks);
+      const tx = db.transaction(TASK_STORE, 'readwrite');
+      await Promise.all(newTasks.map(task => tx.store.add(task)));
+      await tx.done;
+    }
 
-    const request = indexedDB.open(DB_NAME);
-    
-    request.onerror = (event) => {
-      console.error('Database error:', event.target.error);
-      reject('開啟資料庫失敗');
-    };
-    
-    request.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      
-      const addRequest = store.add(safeGoal);
-      
-      addRequest.onsuccess = () => {
-        resolve(addRequest.result);
-      };
-      
-      addRequest.onerror = (event) => {
-        console.error('Add request error:', event.target.error);
-        reject('新增目標失敗');
-      };
-
-      transaction.oncomplete = () => {
-        db.close();
-      };
-    };
-  });
+    // 返回所有今日任務（包含既有的和新生成的）
+    return [...existingTasks, ...newTasks];
+  } catch (error) {
+    console.error('獲取今日任務失敗:', error);
+    throw error;
+  }
 };
 
-export const getAllGoals = () => {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME);
+export const updateTaskStatus = async (taskId, status) => {
+  try {
+    const db = await initDB();
+    const tx = db.transaction(TASK_STORE, 'readwrite');
+    const task = await tx.store.get(taskId);
     
-    request.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction([STORE_NAME], 'readonly');
-      const store = transaction.objectStore(STORE_NAME);
-      
-      const getAllRequest = store.getAll();
-      
-      getAllRequest.onsuccess = () => {
-        resolve(getAllRequest.result);
-      };
-      
-      getAllRequest.onerror = () => {
-        reject('取得目標列表失敗');
-      };
-    };
-  });
+    if (!task) {
+      throw new Error('找不到指定的任務');
+    }
+    
+    task.status = status;
+    task.updatedAt = new Date().toISOString();
+    await tx.store.put(task);
+    await tx.done;
+    
+    return task;
+  } catch (error) {
+    console.error('更新任務狀態失敗:', error);
+    throw new Error('更新任務狀態時發生錯誤');
+  }
 };
 
-export const updateGoal = (goal) => {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME);
+// 內部輔助函數
+async function shouldGenerateTaskForGoal(goal, date) {
+  console.log('檢查是否應生成任務:', goal.title);
+  try {
+    const db = await initDB();
     
-    request.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      
-      const putRequest = store.put(goal);
-      
-      putRequest.onsuccess = () => {
-        resolve(putRequest.result);
-      };
-      
-      putRequest.onerror = () => {
-        reject('更新目標失敗');
-      };
-    };
-  });
-};
+    // 每日任務總是生成
+    if (goal.frequencyType === 'day') {
+      console.log('每日目標，直接生成');
+      return true;
+    }
 
-export const deleteGoal = (id) => {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME);
+    // 檢查週期內是否已達到執行次數
+    const startDate = new Date(date);
+    let endDate = new Date(date);
+
+    switch (goal.frequencyType) {
+      case 'weekly':
+        startDate.setDate(date.getDate() - date.getDay()); // 設為本週日
+        endDate.setDate(startDate.getDate() + 6);
+        break;
+      case 'monthly':
+        startDate.setDate(1);
+        endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+        break;
+      default:
+        console.warn('未知的頻率類型:', goal.frequencyType);
+        return false;
+    }
+
+    const startStr = startDate.toLocaleDateString('zh-TW', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).replace(/\//g, '-');
     
-    request.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction([STORE_NAME], 'readwrite');
-      const store = transaction.objectStore(STORE_NAME);
-      
-      const deleteRequest = store.delete(id);
-      
-      deleteRequest.onsuccess = () => {
-        resolve();
-      };
-      
-      deleteRequest.onerror = () => {
-        reject('刪除目標失敗');
-      };
-    };
-  });
-}; 
+    const endStr = endDate.toLocaleDateString('zh-TW', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).replace(/\//g, '-');
+
+    console.log('檢查時間範圍:', startStr, '至', endStr);
+
+    // 獲取該目標在週期內的所有任務
+    const periodTasks = await db.getAllFromIndex(TASK_STORE, 'goalId', goal.id);
+    const tasksInPeriod = periodTasks.filter(task => 
+      task.date >= startStr && task.date <= endStr
+    );
+
+    // 計算已完成的任務數和已生成的任務數
+    const completedCount = tasksInPeriod.filter(task => task.status === 'completed').length;
+    const generatedCount = tasksInPeriod.length;
+
+    console.log(`目標 ${goal.title} 在當前週期內:`);
+    console.log(`- 已完成次數: ${completedCount}`);
+    console.log(`- 已生成次數: ${generatedCount}`);
+    console.log(`- 週期目標次數: ${goal.timesPerPeriod}`);
+
+    // 如果已完成次數未達標，且已生成次數未達目標次數，則生成新任務
+    const shouldGenerate = completedCount < goal.timesPerPeriod && generatedCount < goal.timesPerPeriod;
+    console.log(`是否生成新任務: ${shouldGenerate}`);
+    return shouldGenerate;
+  } catch (error) {
+    console.error('檢查是否應生成任務時發生錯誤:', error);
+    throw error;
+  }
+} 

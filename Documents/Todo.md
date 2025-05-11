@@ -24,12 +24,12 @@
 - [x] 1.3.3 刪除目標功能
 - [x] 1.3.4 刪除前確認提示
 
-## 2. 每日任務生成與追蹤 [Daily Task Generation and Tracking]
+## 2. 今日任務生成與追蹤 [Daily Task Generation and Tracking]
 
 ### 2.1 任務生成邏輯 [Task Generation Logic]
-- [ ] 2.1.1 依據頻率與完成次數產生任務
-- [ ] 2.1.2 當週完成後隱藏後續任務
-- [ ] 2.1.3 非執行日不產生任務
+- [x] 2.1.1 依據目標的設定頻率與完成次數產生今日任務(依據Documents\TaskGenerationLogicRules.md文件規則開發)，
+- [x] 2.1.2 當週完成後隱藏後續任務
+- [x] 2.1.3 非執行日不產生任務
 
 ### 2.2 任務完成勾選 [Task Completion]
 - [ ] 2.2.1 勾選任務為完成
