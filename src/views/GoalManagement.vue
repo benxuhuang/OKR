@@ -35,12 +35,14 @@
       />
     </div>
 
-    <!-- 目標列表 -->
-    <GoalList
-      :goals="filteredGoals"
-      @edit="handleEdit"
-      @delete="handleDelete"
-    />
+    <!-- 目標列表 (添加 fixed-height-container 類別) -->
+    <div class="fixed-height-container">
+      <GoalList
+        :goals="filteredGoals"
+        @edit="handleEdit"
+        @delete="handleDelete"
+      />
+    </div>
 
     <!-- 懸浮按鈕 -->
     <div class="fixed bottom-6 right-6">
@@ -254,11 +256,51 @@ export default {
   }
 }
 
-.notification-enter-active {
-  animation: slideUp 0.3s ease-out;
+/* 固定高度容器樣式 */
+.fixed-height-container {
+  max-height: calc(100vh - 350px);
+  min-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+  -webkit-overflow-scrolling: touch; /* iOS 滾動優化 */
 }
 
-.notification-leave-active {
-  animation: slideUp 0.3s ease-in reverse;
+/* 自定義滾動條樣式 */
+.fixed-height-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fixed-height-container::-webkit-scrollbar-track {
+  background: rgba(229, 231, 235, 0.5);
+  border-radius: 10px;
+}
+
+.fixed-height-container::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 10px;
+}
+
+.fixed-height-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* 暗黑模式滾動條樣式 */
+.dark .fixed-height-container::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.5);
+}
+
+.dark .fixed-height-container::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.5);
+}
+
+.dark .fixed-height-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+/* 行動裝置媒體查詢 */
+@media (max-width: 768px) {
+  .fixed-height-container {
+    max-height: calc(100vh - 300px);
+  }
 }
 </style> 

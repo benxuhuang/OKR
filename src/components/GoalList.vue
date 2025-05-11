@@ -25,8 +25,8 @@
         class="goal-card bg-white dark:bg-gray-800 shadow rounded-lg p-4 hover:shadow-lg transition-shadow duration-200"
       >
         <div class="flex justify-between items-start mb-3">
-          <h3 class="text-lg font-medium text-gray-800 dark:text-gray-100">{{ goal.title || '未命名目標' }}</h3>
-          <div class="flex space-x-2">
+          <h3 class="text-lg font-medium text-gray-800 dark:text-gray-100 flex-1 pr-2">{{ goal.title || '未命名目標' }}</h3>
+          <div class="flex space-x-2 shrink-0">
             <button
               class="p-2 rounded-lg hover:bg-indigo-100 dark:hover:bg-indigo-900 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 flex items-center justify-center w-8 h-8"
               @click="$emit('edit', goal)"
@@ -57,7 +57,7 @@
           </span>
         </div>
 
-        <p v-if="goal.description" class="text-gray-600 dark:text-gray-300 text-sm mb-3">
+        <p v-if="goal.description" class="text-gray-600 dark:text-gray-300 text-sm mb-3 line-clamp-2">
           {{ goal.description }}
         </p>
 

@@ -1,0 +1,149 @@
+{
+  "project_name": "OKR 系統",
+  "snapshot_version": "1.5.1",
+  "created_at": "2024-06-23T10:00:00Z",
+  "features": [
+    {
+      "feature_id": "5.4",
+      "name": "今日任務清單排版優化",
+      "description": "重新調整今日任務清單項目內的所有內容排版，解決標題過長換行、手機畫面顯示混亂等問題",
+      "implementation": {
+        "files": [
+          "src/views/TodayTasks.vue"
+        ],
+        "changes": [
+          "重構任務項目內容的佈局結構，採用更具彈性的分層設計",
+          "添加文字截斷和換行處理，防止長標題破壞版面",
+          "優化手機畫面下的間距和標籤顯示",
+          "修正頻率類型標籤顯示邏輯，支援更多類型值"
+        ]
+      }
+    }
+  ],
+  "change_log": [
+    {
+      "version": "1.5.1",
+      "date": "2024-06-23",
+      "changes": [
+        {
+          "type": "enhancement",
+          "description": "重新設計任務清單項目佈局結構，優化手機顯示效果"
+        },
+        {
+          "type": "enhancement",
+          "description": "改進任務標題顯示方式，支援自動截斷和換行"
+        },
+        {
+          "type": "bugfix",
+          "description": "修正頻率類型標籤顯示問題，支援多種頻率類型格式"
+        },
+        {
+          "type": "enhancement",
+          "description": "優化手機螢幕下的間距和排版"
+        }
+      ]
+    }
+  ],
+  "inherited_features": [
+    {
+      "feature_id": "5.1",
+      "name": "任務頻率類型標籤顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.2",
+      "name": "任務清單固定高度與滾動條",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.3",
+      "name": "目標清單佈局優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.5",
+      "name": "修復行動版導航選單",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.1",
+      "name": "響應式導航欄",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.2",
+      "name": "目標管理頁面優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.3",
+      "name": "頻率與日期顯示優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.4",
+      "name": "設定頁面統一佈局",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.1",
+      "name": "任務時間排序",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.2",
+      "name": "任務頻率資訊顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.3",
+      "name": "資料庫重設功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.4",
+      "name": "資料匯出功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.5",
+      "name": "資料匯入功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.6",
+      "name": "深色模式",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.1",
+      "name": "建立目標",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.1",
+      "name": "目標列表",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.2",
+      "name": "編輯目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.3",
+      "name": "刪除目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.4",
+      "name": "刪除前確認提示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "2.1",
+      "name": "今日任務生成邏輯",
+      "status": "inherited"
+    }
+  ]
+} 

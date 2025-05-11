@@ -76,24 +76,26 @@
       </p>
     </div>
 
-    <!-- 任務列表 -->
-    <div v-else class="space-y-4">
+    <!-- 任務列表 - 添加固定高度和滾動條 -->
+    <div v-else class="space-y-4 task-list-container">
       <div 
         v-for="task in filteredTasks" 
         :key="task.id"
-        class="task-list-item bg-white dark:bg-gray-800 shadow rounded-lg p-4 flex items-center transition-all duration-300"
+        class="task-list-item bg-white dark:bg-gray-800 shadow rounded-lg p-4 transition-all duration-300"
         :class="{ 'opacity-75': task.status === 'completed' }"
       >
-        <div class="flex-1">
-          <div class="flex items-center">
+        <!-- 重新排版任務內容 -->
+        <div class="flex flex-col w-full">
+          <!-- 第一行：核取方塊、標題 -->
+          <div class="flex items-center mb-2">
             <input 
               type="checkbox" 
-              class="task-checkbox w-5 h-5 text-indigo-600 dark:text-indigo-500 rounded mr-3 cursor-pointer transition-colors duration-200"
+              class="task-checkbox w-5 h-5 text-indigo-600 dark:text-indigo-500 rounded mr-3 cursor-pointer transition-colors duration-200 flex-shrink-0"
               :checked="task.status === 'completed'"
               @change="toggleTaskStatus(task)"
             >
             <span 
-              class="task-title text-lg font-medium transition-all duration-200"
+              class="task-title font-medium transition-all duration-200 line-clamp-2 break-words"
               :class="[
                 task.status === 'completed' 
                   ? 'text-gray-400 dark:text-gray-500 line-through' 
@@ -101,16 +103,32 @@
               ]"
             >{{ task.title }}</span>
           </div>
-          <p class="text-gray-500 dark:text-gray-400 mt-1 ml-8">
-            <i class="far fa-clock mr-1"></i>今日 {{ formatTime(task.time) }}
-          </p>
-        </div>
-        <div class="flex items-center">
-          <div 
-            class="px-3 py-1 rounded-full text-sm"
-            :class="getStatusClass(task.status)"
-          >
-            {{ getStatusText(task.status) }}
+          
+          <!-- 第二行：時間與狀態 -->
+          <div class="flex flex-wrap items-center justify-between ml-8 mt-1">
+            <div class="flex items-center flex-wrap gap-2">
+              <span class="text-gray-500 dark:text-gray-400 flex items-center flex-shrink-0">
+                <font-awesome-icon icon="clock" class="mr-1" />
+                {{ formatTime(task.time) }}
+              </span>
+              
+              <!-- 頻率類型標籤 -->
+              <span 
+                v-if="task.frequencyType" 
+                class="px-2 py-0.5 text-xs rounded-full flex-shrink-0"
+                :class="getFrequencyTypeClass(task.frequencyType)"
+              >
+                {{ getFrequencyTypeLabel(task.frequencyType) }}
+              </span>
+            </div>
+            
+            <!-- 狀態標籤 -->
+            <div 
+              class="px-3 py-1 rounded-full text-xs mt-2 sm:mt-0 flex-shrink-0"
+              :class="getStatusClass(task.status)"
+            >
+              {{ getStatusText(task.status) }}
+            </div>
           </div>
         </div>
       </div>
@@ -206,6 +224,30 @@ export default {
       return time;
     };
 
+    // 新增頻率類型標籤函數
+    const getFrequencyTypeLabel = (type) => {
+      const labels = {
+        'day': '每日',
+        'daily': '每日',
+        'weekly': '每週',
+        'monthly': '每月',
+        'once': '單次'
+      };
+      return labels[type] || type;
+    };
+
+    // 新增頻率類型樣式函數
+    const getFrequencyTypeClass = (type) => {
+      const classes = {
+        'day': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+        'daily': 'bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200',
+        'weekly': 'bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200',
+        'monthly': 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200',
+        'once': 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200'
+      };
+      return classes[type] || 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300';
+    };
+
     const getStatusClass = (status) => {
       switch (status) {
         case 'completed':
@@ -252,27 +294,96 @@ export default {
       totalTasks,
       progressPercentage,
       formattedDate,
-      toggleTaskStatus,
       getFilterCount,
       formatTime,
+      toggleTaskStatus,
       getStatusClass,
-      getStatusText
+      getStatusText,
+      getFrequencyTypeLabel,
+      getFrequencyTypeClass
     };
   }
 };
 </script>
 
 <style scoped>
+/* 任務列表容器樣式 */
+.task-list-container {
+  max-height: calc(100vh - 350px);
+  min-height: 200px;
+  overflow-y: auto;
+  padding-right: 4px;
+  -webkit-overflow-scrolling: touch; /* iOS 滾動優化 */
+}
+
+/* 自定義滾動條樣式 */
+.task-list-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.task-list-container::-webkit-scrollbar-track {
+  background: rgba(229, 231, 235, 0.5);
+  border-radius: 10px;
+}
+
+.task-list-container::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 10px;
+}
+
+.task-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+/* 暗黑模式滾動條樣式 */
+.dark .task-list-container::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.5);
+}
+
+.dark .task-list-container::-webkit-scrollbar-thumb {
+  background: rgba(107, 114, 128, 0.5);
+}
+
+.dark .task-list-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+/* 任務項目樣式優化 */
 .task-list-item {
   transition: all 0.3s ease;
 }
 
-.task-list-item:hover {
-  transform: translateX(5px);
+.task-title {
+  word-break: break-word;
+  hyphens: auto;
+  max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.task-checkbox:checked + .task-title {
-  text-decoration: line-through;
-  color: #a0aec0;
+/* 行動裝置媒體查詢 */
+@media (max-width: 768px) {
+  .task-list-container {
+    max-height: calc(100vh - 300px);
+  }
+  
+  /* 在手機畫面下讓標籤更緊湊 */
+  .task-list-item {
+    padding: 0.875rem;
+  }
+  
+  /* 優化手機畫面下的間距 */
+  .task-list-item .flex-wrap {
+    gap: 0.5rem;
+  }
+}
+
+/* 特小螢幕優化 */
+@media (max-width: 360px) {
+  .task-list-item {
+    padding: 0.75rem;
+  }
 }
 </style> 
