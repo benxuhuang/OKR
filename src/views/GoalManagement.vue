@@ -12,16 +12,16 @@
             v-model="searchQuery"
             type="text"
             placeholder="搜尋目標..."
-            class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 transition-all duration-200 outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
+            class="w-full pl-4 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-800 focus:border-indigo-400 dark:focus:border-indigo-600 transition-all duration-200 outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100"
           >
           <i class="fas fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
         </div>
-        <button
+        <!-- <button
           class="w-full sm:w-auto px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors duration-200 flex items-center justify-center"
           @click="showForm = true"
         >
-          <i class="fas fa-plus mr-2"></i>新增
-        </button>
+        <font-awesome-icon icon="plus" class="text-lg mr-2" />新增
+        </button> -->
       </div>
     </div>
 
