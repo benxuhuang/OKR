@@ -14,6 +14,17 @@
           history.replaceState(null, null, redirect);
         }
       })();
+
+      // 註冊Service Worker (特別是行動裝置上的通知功能需要)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('Service Worker 註冊成功:', registration.scope);
+          }).catch(function(error) {
+            console.log('Service Worker 註冊失敗:', error);
+          });
+        });
+      }
     </script>
   </head>
   <body>

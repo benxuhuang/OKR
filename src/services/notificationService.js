@@ -8,6 +8,28 @@ export const isNotificationSupported = () => {
   return 'Notification' in window;
 };
 
+// 檢查瀏覽器是否支援Service Worker
+export const isServiceWorkerSupported = () => {
+  return 'serviceWorker' in navigator;
+};
+
+// 註冊Service Worker
+export const registerServiceWorker = async () => {
+  if (!isServiceWorkerSupported()) {
+    console.error('此瀏覽器不支援Service Worker');
+    return false;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.register('/sw.js');
+    console.log('Service Worker 註冊成功:', registration.scope);
+    return true;
+  } catch (error) {
+    console.error('Service Worker 註冊失敗:', error);
+    return false;
+  }
+};
+
 // 請求通知權限
 export const requestNotificationPermission = async () => {
   if (!isNotificationSupported()) {
@@ -16,6 +38,11 @@ export const requestNotificationPermission = async () => {
   }
 
   try {
+    // 先註冊 Service Worker (特別是行動裝置需要)
+    if (isServiceWorkerSupported()) {
+      await registerServiceWorker();
+    }
+    
     const permission = await Notification.requestPermission();
     console.log('通知權限狀態:', permission);
     return permission === 'granted';
@@ -56,19 +83,27 @@ export const sendNotification = (title, options = {}) => {
     // 合併用戶選項和預設選項
     const notificationOptions = { ...defaultOptions, ...options };
     
-    // 建立並發送通知
-    const notification = new Notification(title, notificationOptions);
-    
-    // 設定點擊事件
-    notification.onclick = () => {
-      window.focus();
-      notification.close();
-      if (options.onClick) {
-        options.onClick();
-      }
-    };
+    // 使用 Service Worker 發送通知 (優先，特別是行動裝置)
+    if (isServiceWorkerSupported() && navigator.serviceWorker.controller) {
+      navigator.serviceWorker.ready.then(registration => {
+        registration.showNotification(title, notificationOptions);
+      });
+      return true;
+    } else {
+      // 回退到標準 Notification API (桌面瀏覽器)
+      const notification = new Notification(title, notificationOptions);
+      
+      // 設定點擊事件
+      notification.onclick = () => {
+        window.focus();
+        notification.close();
+        if (options.onClick) {
+          options.onClick();
+        }
+      };
 
-    return notification;
+      return notification;
+    }
   } catch (error) {
     console.error('發送通知時發生錯誤:', error);
     return null;

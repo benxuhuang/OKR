@@ -84,6 +84,15 @@ themeStore.initTheme()
 
 // 初始化通知設定
 import { useNotificationStore } from './stores/notificationStore'
+import { registerServiceWorker, isServiceWorkerSupported } from './services/notificationService'
+
+// 註冊Service Worker (對行動裝置上的通知功能至關重要)
+if (isServiceWorkerSupported()) {
+  registerServiceWorker().then(registered => {
+    console.log('Service Worker已註冊狀態:', registered ? '成功' : '失敗');
+  });
+}
+
 const notificationStore = useNotificationStore(pinia)
 notificationStore.initNotificationSettings()
 

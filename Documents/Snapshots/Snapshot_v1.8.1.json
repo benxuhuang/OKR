@@ -1,0 +1,197 @@
+{
+  "project_name": "OKR 系統",
+  "snapshot_version": "1.8.1",
+  "created_at": "2024-07-25T16:00:00Z",
+  "features": [
+    {
+      "feature_id": "1.2.4",
+      "name": "行動裝置通知支援",
+      "description": "修正Android裝置上無法接收通知訊息的問題，實作Service Worker支援",
+      "implementation": {
+        "files": [
+          "public/sw.js",
+          "src/services/notificationService.js",
+          "src/main.js",
+          "index.html"
+        ],
+        "changes": [
+          "新增Service Worker檔案實現推播通知功能",
+          "更新通知服務以支援Service Worker註冊",
+          "修改通知發送邏輯，優先使用Service Worker發送通知以支援行動裝置",
+          "在應用程式初始化時自動註冊Service Worker",
+          "在HTML頁面中添加Service Worker註冊程式碼確保兼容性"
+        ]
+      }
+    }
+  ],
+  "change_log": [
+    {
+      "version": "1.8.1",
+      "date": "2024-07-25",
+      "changes": [
+        {
+          "type": "bugfix",
+          "description": "修復Android裝置上無法收到通知訊息的問題"
+        },
+        {
+          "type": "feature",
+          "description": "實作Service Worker支援，提升行動裝置上的通知功能穩定性"
+        },
+        {
+          "type": "enhancement",
+          "description": "改善通知發送邏輯，增加跨平台兼容性"
+        }
+      ]
+    },
+    {
+      "version": "1.8.0",
+      "date": "2024-07-05",
+      "changes": [
+        {
+          "type": "feature",
+          "description": "週統計頁面與視覺化功能完成，包含目標完成率、完成趨勢與進度條顯示"
+        },
+        {
+          "type": "feature",
+          "description": "實作週資料切換功能，可查看歷史週數據"
+        },
+        {
+          "type": "enhancement",
+          "description": "目標分類比例統計與視覺化展示，使用圓餅圖顯示"
+        }
+      ]
+    }
+  ],
+  "inherited_features": [
+    {
+      "feature_id": "3.1.1",
+      "name": "週統計頁面與數據視覺化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.4.1",
+      "name": "更新目標進度顯示方式",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.2.1",
+      "name": "推播通知邏輯",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.2.2",
+      "name": "瀏覽器通知授權請求處理",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.2.3",
+      "name": "使用者瀏覽器背景常駐偵測",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.4",
+      "name": "今日任務清單排版優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.1",
+      "name": "任務頻率類型標籤顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.2",
+      "name": "任務清單固定高度與滾動條",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "5.3",
+      "name": "目標清單佈局優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.5",
+      "name": "修復行動版導航選單",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.1",
+      "name": "響應式導航欄",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.2",
+      "name": "目標管理頁面優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.3",
+      "name": "頻率與日期顯示優化",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "4.4",
+      "name": "設定頁面統一佈局",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.1",
+      "name": "任務時間排序",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.2",
+      "name": "任務頻率資訊顯示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.3",
+      "name": "資料庫重設功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.4",
+      "name": "資料匯出功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.5",
+      "name": "資料匯入功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "3.6",
+      "name": "深色模式",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.1",
+      "name": "建立目標",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.1",
+      "name": "目標列表",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.2",
+      "name": "編輯目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.3",
+      "name": "刪除目標功能",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "1.3.4",
+      "name": "刪除前確認提示",
+      "status": "inherited"
+    },
+    {
+      "feature_id": "2.1",
+      "name": "今日任務生成邏輯",
+      "status": "inherited"
+    }
+  ]
+} 
