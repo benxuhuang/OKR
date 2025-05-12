@@ -160,6 +160,16 @@ export const getTodayTasks = async () => {
     const existingTasks = await db.getAllFromIndex(TASK_STORE, 'date', todayStr);
     console.log('已存在的今日任務:', existingTasks);
 
+    // 將現有任務按 goalId 分組，確保每個目標只有一個任務
+    const tasksByGoalId = {};
+    existingTasks.forEach(task => {
+      // 如果這個目標ID還沒有任務，或者當前任務更新時間更新，則使用這個任務
+      if (!tasksByGoalId[task.goalId] || 
+          new Date(task.updatedAt) > new Date(tasksByGoalId[task.goalId].updatedAt)) {
+        tasksByGoalId[task.goalId] = task;
+      }
+    });
+
     // 檢查每個目標是否需要生成任務
     const newTasks = [];
     const date = new Date(todayStr);
@@ -171,9 +181,7 @@ export const getTodayTasks = async () => {
       console.log('檢查目標:', goal.title);
       
       // 檢查是否已經存在此目標的任務
-      const existingTask = existingTasks.find(task => task.goalId === goal.id);
-      
-      if (!existingTask) {
+      if (!tasksByGoalId[goal.id]) {
         console.log('目標尚未生成今日任務');
         
         // 如果是每日目標或今天是執行日，則檢查是否應該生成任務
@@ -209,8 +217,8 @@ export const getTodayTasks = async () => {
       await tx.done;
     }
 
-    // 返回所有今日任務（包含既有的和新生成的）
-    return [...existingTasks, ...newTasks];
+    // 返回所有今日任務（包含已整理的現有任務和新生成的）
+    return [...Object.values(tasksByGoalId), ...newTasks];
   } catch (error) {
     console.error('獲取今日任務失敗:', error);
     throw error;
@@ -254,6 +262,11 @@ async function shouldGenerateTaskForGoal(goal, date) {
     // 檢查週期內是否已達到執行次數
     const startDate = new Date(date);
     let endDate = new Date(date);
+    const dateStr = date.toLocaleDateString('zh-TW', { 
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit' 
+    }).replace(/\//g, '-');
 
     switch (goal.frequencyType) {
       case 'weekly':
@@ -288,6 +301,13 @@ async function shouldGenerateTaskForGoal(goal, date) {
     const tasksInPeriod = periodTasks.filter(task => 
       task.date >= startStr && task.date <= endStr
     );
+
+    // 檢查同一天是否已經有任務（避免重複生成）
+    const hasTaskToday = periodTasks.some(task => task.date === dateStr);
+    if (hasTaskToday) {
+      console.log(`目標 ${goal.title} 今天已有任務`);
+      return false;
+    }
 
     // 計算已完成的任務數和已生成的任務數
     const completedCount = tasksInPeriod.filter(task => task.status === 'completed').length;
@@ -363,10 +383,25 @@ export const importData = async (file) => {
       }
     }
     
+    // 處理任務並去重
     if (data.tasks?.length) {
+      // 將任務按日期和目標ID分組，只保留最新的版本
+      const taskMap = {};
+      
       for (const task of data.tasks) {
-        await tx.objectStore(TASK_STORE).add(task);
+        const key = `${task.date}_${task.goalId}`;
+        
+        if (!taskMap[key] || new Date(task.updatedAt) > new Date(taskMap[key].updatedAt)) {
+          taskMap[key] = task;
+        }
       }
+      
+      // 只匯入去重後的任務
+      for (const key in taskMap) {
+        await tx.objectStore(TASK_STORE).add(taskMap[key]);
+      }
+      
+      console.log(`匯入 ${Object.keys(taskMap).length} 筆任務（原始數據: ${data.tasks.length} 筆）`);
     }
     
     await tx.done;

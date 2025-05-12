@@ -61,10 +61,26 @@ async function generateDailyTasks(dateStr) {
       return [];
     }
 
+    // 獲取今日已存在的任務
+    const existingTasks = await db.getAllFromIndex(TASK_STORE, 'date', dateStr);
+    console.log('已存在的今日任務:', existingTasks);
+    
+    // 將現有任務按 goalId 分組
+    const existingTasksByGoalId = {};
+    existingTasks.forEach(task => {
+      existingTasksByGoalId[task.goalId] = task;
+    });
+
     const tasks = [];
     const date = new Date(dateStr);
 
     for (const goal of goals) {
+      // 檢查今天是否已有此目標的任務
+      if (existingTasksByGoalId[goal.id]) {
+        console.log(`目標 ${goal.title} 今天已有任務`);
+        continue;
+      }
+      
       const shouldGenerate = await shouldGenerateTaskForGoal(goal, date);
       if (shouldGenerate) {
         tasks.push({
@@ -88,7 +104,8 @@ async function generateDailyTasks(dateStr) {
       console.log('已生成今日任務:', tasks);
     }
 
-    return tasks;
+    // 返回所有今日任務（包含既有的和新生成的）
+    return [...existingTasks, ...tasks];
   } catch (error) {
     console.error('生成今日任務失敗:', error);
     throw new Error('生成今日任務時發生錯誤');
@@ -114,6 +131,20 @@ async function shouldGenerateTaskForGoal(goal, date) {
     const startDate = new Date(date);
     let endDate = new Date(date);
 
+    // 檢查今天是否已有此目標的任務
+    const dateStr = date.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })
+      .replace(/\//g, '-');
+    
+    // 查詢目標的所有任務
+    const goalTasks = await db.getAllFromIndex(TASK_STORE, 'goalId', goal.id);
+    
+    // 檢查今天是否已有任務
+    const hasTodayTask = goalTasks.some(task => task.date === dateStr);
+    if (hasTodayTask) {
+      console.log(`目標 ${goal.title} 今天已有任務`);
+      return false;
+    }
+
     switch (goal.frequencyType) {
       case 'day':
         return true; // 每日任務固定生成
@@ -138,17 +169,22 @@ async function shouldGenerateTaskForGoal(goal, date) {
     const endStr = endDate.toLocaleDateString('zh-TW', { year: 'numeric', month: '2-digit', day: '2-digit' })
       .replace(/\//g, '-');
 
-    // 查詢指定時間範圍內的已完成任務數
-    const completedTasks = await db.getAllFromIndex(TASK_STORE, 'goalId', goal.id);
+    // 在指定時間範圍內的任務
+    const tasksInPeriod = goalTasks.filter(task => 
+      task.date >= startStr && task.date <= endStr
+    );
     
-    const completedCount = completedTasks.filter(task => {
-      return task.status === 'completed' &&
-             task.date >= startStr &&
-             task.date <= endStr;
-    }).length;
+    // 計算已完成的任務數和已生成的任務數
+    const completedCount = tasksInPeriod.filter(task => task.status === 'completed').length;
+    const generatedCount = tasksInPeriod.length;
 
-    console.log(`目標 ${goal.title} 在當前週期內已完成 ${completedCount}/${goal.timesPerPeriod} 次`);
-    return completedCount < goal.timesPerPeriod;
+    console.log(`目標 ${goal.title} 在當前週期內:`);
+    console.log(`- 已完成次數: ${completedCount}`);
+    console.log(`- 已生成次數: ${generatedCount}`);
+    console.log(`- 週期目標次數: ${goal.timesPerPeriod}`);
+
+    // 如果已完成次數未達標，且已生成次數未達目標次數，則生成新任務
+    return completedCount < goal.timesPerPeriod && generatedCount < goal.timesPerPeriod;
   } catch (error) {
     console.error('檢查是否應生成任務時發生錯誤:', error);
     throw new Error('檢查任務生成條件時發生錯誤');
