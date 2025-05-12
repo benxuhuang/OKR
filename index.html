@@ -14,8 +14,19 @@
           history.replaceState(null, null, redirect);
         }
       })();
+
+      // 註冊Service Worker (特別是行動裝置上的通知功能需要)
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').then(function(registration) {
+            console.log('Service Worker 註冊成功:', registration.scope);
+          }).catch(function(error) {
+            console.log('Service Worker 註冊失敗:', error);
+          });
+        });
+      }
     </script>
-    <script type="module" crossorigin src="/okr/assets/index-5378ebd1.js"></script>
+    <script type="module" crossorigin src="/okr/assets/index-51c39130.js"></script>
     <link rel="modulepreload" crossorigin href="/okr/assets/vendor-1816d123.js">
     <link rel="stylesheet" href="/okr/assets/index-645fecc8.css">
   </head>
